@@ -1,0 +1,49 @@
+# Prediction
+
+Two types of predictions:
+
+- Prediction of a *future observation*: $y_0$
+
+- Prediction of the *future mean response*: $\mathbb{E}[Y|X=x_0]$
+
+## Prediction Interval
+
+We aim to use the predicted value to quantify the high-probability range of the actual response.
+Let $(\boldsymbol{x}_0, y_0)$ be a future data pair and $\hat{y}_0:=\boldsymbol{x}_0^\top\hat{\boldsymbol{\beta}}$ be its predicted value.
+
+### Future observation
+
+We already know that 
+
+- $y_0\sim \mathcal{N}_1(\boldsymbol{x}_0^\top\hat{\boldsymbol{\beta}},\sigma^2)$
+- $\hat{y}_0\sim\mathcal{N}_1(\boldsymbol{x}_0^\top\hat{\boldsymbol{\beta}},\sigma^2\boldsymbol{x}_0^\top(X^\top X)^{-1}\boldsymbol{x}_0)$
+- $y_0$ and $\hat{y}_0$ are independent. 
+
+This implies $\hat{y}_0-y_0\sim\mathcal{N}_1(0,\sigma^2(1+\boldsymbol{x}_0^\top(X^\top X)^{-1}\boldsymbol{x}_0))$ and therefore,
+$$
+  \frac{\hat{y}_0-y_0}{\hat{\sigma}\sqrt{1+\boldsymbol{x}_0^\top(X^\top X)^{-1}\boldsymbol{x}_0}} = \frac{(\hat{y}_0-y_0)/\big(\sigma\sqrt{1+\boldsymbol{x}_0^\top(X^\top X)^{-1}\boldsymbol{x}_0}\big)}{\hat{\sigma}/\sigma}\sim t_{n-p-1}
+$$
+The prediction interval can then be constructed by
+$$
+  \boldsymbol{x}_0^\top\hat{\boldsymbol{\beta}}\pm t_{n-p-1}^{(\alpha/2)}\hat{\sigma}\sqrt{1+\boldsymbol{x}_0^\top(X^\top X)^{-1}\boldsymbol{x}_0}
+$$
+
+### Future mean response
+
+This can be derived directly from the distribution of $\hat{y}_0$:
+$$
+  \boldsymbol{x}_0^\top\hat{\boldsymbol{\beta}}\pm t_{n-p-1}^{(\alpha/2)}\hat{\sigma}\sqrt{\boldsymbol{x}_0^\top(X^\top X)^{-1}\boldsymbol{x}_0}
+$$
+  
+- This is exactly the confidence interval for the (BLUE) estimator $\hat{\psi}=\boldsymbol{x}_0^\top\hat{\boldsymbol{\beta}}$ of the quantity $\psi=\boldsymbol{x}_0^\top\boldsymbol{\beta}$.
+
+
+## R Example
+
+``` {r}
+data(savings)
+result <- lm(sr ~ pop15 + pop75 + dpi + ddpi, savings)
+x0 <- data.frame(pop15=35, pop75=2, dpi=1000, ddpi=4)
+predict(result, x0, interval="confidence")  # prediction interval for E[Y|X=x0]
+predict(result, x0, interval="prediction")  # prediction interval for y0
+```

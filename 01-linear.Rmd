@@ -1,0 +1,210 @@
+# Estimation
+
+Estimator is a statistic (a function of the observed finite samples/dataset) that is used to estimate an unknown population parameter.
+**Criterion**: *Least Squares* (LS) or *Sum of Squared Errors* (SSE)
+$$
+\min_{\boldsymbol{\beta}\in\mathbb{R}^{p+1}}\;\sum_{i\in[n]}\varepsilon_i^2=\sum_{i\in[n]}\left(y_i-\beta_0-\sum_{j\in[p]}x_{ij}\beta_j\right)^2.
+$$
+
+
+## Simple Linear Regression
+This is the special case when $p=1$ (i.e., one predictor). The optimization problem is convex and can be solved with the first order condition:
+$$
+\hat{\beta}_1=\frac{\sum_{i\in[n]}(x_{i}-\bar{x})(y_i-\bar{y})}{\sum_{i\in[n]}(x_i-\bar{x})^2}=\frac{s^2_{xy}}{s_x^2}=r_{xy}\times\frac{s_y}{s_x}
+$$
+where $s^2_{xy}$, $s^2_x$, $s_y^2$, and $r_{xy}$ are sample covariance of $X$ and $Y$, sample variance of $X$, sample variance of $Y$, and sample correlation of $X$ and $Y$, respectively;  and 
+$$
+\hat{\beta}_0=\bar{y}-\hat{\beta}_1\bar{x}.
+$$
+Plugin the above solution into the regression line $y=\hat{\beta}_1x+\hat{\beta}_0$, we obtain the concise expression
+$$
+\frac{y-\bar{y}}{s_y}=r\frac{x-\bar{x}}{s_x}
+$$
+
+*Remarks*
+
+  - Let x and y be standardized by sample mean and standard deviation. Then, the regression lines are $y=rx$ and $x=ry$. Notice that the lines are different unless $r=\pm 1$, representing perfect correlation.
+
+## Multiple Linear Regression
+This is the general case with $p\geq 1$. Denote $\boldsymbol{x}_i=(1, x_{i1},\dots,x_{ip})^\top\in\mathbb{R}^{p+1}$ and the data matrix $X:=(\boldsymbol{x}_1,\dots,\boldsymbol{x}_n)^\top\in\mathbb{R}^{(p+1)\times n}$. The estimator is given by the MSE solution
+$$
+\hat{\boldsymbol{\beta}} = (X^\top X)^{-1}X^\top\boldsymbol{y}
+$$
+*Remarks*
+
+  - $H:=X(X^\top X)^{-1}X$ is the *projection matrix* onto $\textrm{Col}(X)$. In other words, linear regression is equivalent to projecting the response vector on to $\textrm{Col}(X)$ and $\hat{\boldsymbol{\beta}}$ is the projection coefficient. 
+    - $H$ is also called the *hat matrix* as it converts the response vector $\boldsymbol{y}$ to the "hatted" (i.e., predicted) response vector $\hat{\boldsymbol{y}}$
+    - $R:=I-H$ is the *residual matrix* as it produces the residual vector $\hat{\boldsymbol{e}}:=\boldsymbol{y}-\hat{\boldsymbol{y}}$
+  
+  
+  - $\hat{\boldsymbol{\beta}}$ is *unbiased*: $\mathbb{E}[\hat{\boldsymbol{\beta}}] = (X^\top X)^{-1}X^\top(X\vec{\beta}+\varepsilon)=\boldsymbol{\beta}$
+  - When noise are *homoscedasticity* with variance $\sigma^2$, then the variance of the estimator equals
+  $$\textrm{Var}(\hat{\boldsymbol{\beta}})=(X^\top X)^{-1}X^\top\textrm{Var}(\varepsilon)X(X^\top X)^{-1}=\sigma^2(X^\top X)^{-1}$$
+  - An unbiased estimator of the noise variance is
+  $$
+  \hat{\sigma}^2=\frac{\sum_{i\in[n]}(y_i-\hat{y})^2}{n-(p+1)}.
+  $$
+  
+
+## Error Analysis
+Error analysis is a study of the residuals $e_i:=y_i-\hat{y}_i$ for all $i\in[n]$. 
+
+
+::: {.lemma}
+$\sum_{i\in[n]}e_i=0$ or equivalently $\frac{1}{n}\sum_{i\in[n]}\hat{y}_i=\bar{y}$.
+:::
+::: {.proof}
+By the projection theorem, $\boldsymbol{e}\perp \textrm{Col}(X)$. Then, notice $\boldsymbol{1}\in\textrm{Col}(X)$.
+:::
+
+
+Define *residual sum of squares* (i.e., the LS loss at the optimal estimator) as 
+$$
+  RSS :=\sum_{i\in[n]}e_i^2 = \sum_{i\in[n]}(y_i-\hat{y}_i)^2
+$$ 
+and the *total sum of squares*
+$$
+  TSS := \sum_{i\in[n]}(y_i-\bar{y}_i)^2.
+$$
+
+We measure the goodness-of-fit using the *coefficient of determination* or $R^2$
+
+$$
+R^2=1-\frac{RSS}{TSS}
+$$
+$R^2$ measures *the proportion of variability of the response variable that can be explained by the predictors.* 
+
+*Remarks*
+
+  - RSS alone as the error metric has the problem that it *does not have reasonable units*.
+  - Variability of the predictors or *regression sum of squares*: $\sum_{i\in[n]}(\hat{y}_i-\bar{y})^2=TSS - RSS$
+  - For simple linear regression: $R^2 = r^2$
+  - Small $R^2$ does not mean $x,y$ are not linearly related; it just means the variance of noise is high compared to the trend (i.e., low snr)
+  - Large $R^2$ does not mean the model is correct (e.g., quadratic model with zero noise)
+  - $R^2$ always increase when adding more *predictors* to the model because setting $\beta$ for the new predictor to zero recovers the old $RSS$, which equals to the LS under the optimal estimator.
+  
+    *Adjusted $R^2$* is used to mitigate the issue of number of predictors:
+    $$
+      \textrm{Adjusted }R^2 = 1 - \frac{RSS/(n-p-1)}{TSS / (n-1)} = 1-\frac{\hat{\sigma}^2}{s_y^2}
+    $$
+    
+## The Gauss-Markov Theorem
+
+::: {.definition}
+A *linear estimator* of the quantity $\psi$ is a linear combination of the *responses*: $\hat{\psi}=c_1y_1+\dots+c_ny_n$.
+:::
+
+
+The linear regression produces the *best linear unbiased estimator* (BLUE) in the following sense.
+
+
+::: {.theorem}
+Suppose $\boldsymbol{y}=X\boldsymbol{\beta}+\varepsilon$, $X$ is full rank, $\mathbb{E}[\varepsilon]=\boldsymbol{0}$, and $\textrm{Var}(\varepsilon)=\sigma^2I$. Consider the quantity $\psi=\boldsymbol{c}^\top\boldsymbol{\beta}$. Then, among all unbiased and linear estimator of $\psi$, $\hat{\psi}:=\boldsymbol{c}^\top\hat{\boldsymbol{\beta}}$ has the minimum variance and is unique.
+:::
+::: {.proof}
+Let $\tilde{\psi}=\boldsymbol{b}^\top\boldsymbol{y}$ be an arbitrary unbiased linear estimator of $\psi$. Then, we have 
+$$
+  \textrm{Var}(\tilde{\psi}) = \boldsymbol{b}^\top\textrm{Var}(\boldsymbol{y})\boldsymbol{b} = \sigma^2\lVert\boldsymbol{b}\rVert^2
+$$
+Since $\tilde{\psi}$ is unbiased, $\mathbb{E}[\tilde{\psi}]=\boldsymbol{b}^\top X\boldsymbol{\beta}=\boldsymbol{c}^\top\boldsymbol{\beta}$ for every $\boldsymbol{\beta}$. Thus, we must have $\boldsymbol{b}^\top X=\boldsymbol{c}^\top$. The minimum variance of $\tilde{\psi}$ can be obtained from the following optimization problem
+$$
+  \min_{\boldsymbol{b}\in\mathbb{R}^n}\;\lVert\boldsymbol{b}\rVert^2\quad \textrm{s.t.}\quad\boldsymbol{b}^\top X=\boldsymbol{c}^\top.
+$$
+The lagrangian of this problem is $L(\boldsymbol{\beta},\boldsymbol{\lambda})=\lVert\boldsymbol{b}\rVert^2+\boldsymbol{\lambda}^\top(X^\top\boldsymbol{b}-\boldsymbol{c})$. The first order condition implies $\boldsymbol{b}^*=-\frac{1}{2}X \boldsymbol{\lambda}$ and the dual function is 
+$$
+  D(\lambda)=-\frac{1}{4}\boldsymbol{\lambda}^\top(X^\top X)\boldsymbol{\lambda}-\boldsymbol{\lambda}^\top\boldsymbol{c}.
+$$ 
+It is easy to check that the strong duality holds and the dual maximizer satisfies $\boldsymbol{\lambda}^*=-2(X^\top X)^{-1}\boldsymbol{c}$. Thus, we must have $\boldsymbol{b}^*=X(X^\top X)^{-1}\boldsymbol{c}$. So, this minimum variance unbiased linear estimator is
+$$
+  \hat{\psi} = (\boldsymbol{b}^*)^\top\boldsymbol{y} = \boldsymbol{c}^\top(X^\top X)^{-1}X^\top\boldsymbol{y} = \boldsymbol{c}^\top\hat{\boldsymbol{\beta}}.
+$$
+
+The uniqueness is obvious as the optimization is strongly convex.
+:::
+
+*Remarks*
+
+  - In the linear regression model, $f(X)$ is best estimated by $X\hat{\beta}$ by taking $\boldsymbol{c}=(1,X_1,\dots,X_p)^\top$
+  - Unbiased cannot be dropped: ridge regression has lower variance than linear regression
+  
+  
+## Introducing Predictors
+
+### General Theory
+
+Let $X\in\mathbb{R}^{n\times(p+1)}$ be existing data matrix and $Z\in\mathbb{R}^{n\times q}$ be the data matrix consisting additional predictors. The linear regression model can be written as 
+$$
+  \mathbb{E}[Y|X,Z] = X\boldsymbol{\delta} + Z\boldsymbol{\gamma}
+$$
+Let the optimal (LS-minimal) coefficients be $\hat{\boldsymbol{\delta}}$ and $\hat{\boldsymbol{\gamma}}$. Our goal is to compare $\hat{\boldsymbol{\delta}}$ with $\hat{\boldsymbol{\beta}}$ --- the regression coefficients with the old predictors only.
+
+:::{.theorem name="Coefficients of Additional Predictors"}
+Assume columns of $X$ and $Z$ are independent so that a unique solution exists. Then,
+
+- $\hat{\boldsymbol{\gamma}}=(Z^\top RZ)^{-1}Z^\top R\boldsymbol{y}$ --- projection coefficient of the response vector onto the $X$-residualized column space of $Z$ (i.e., $\mathcal{C}(X)^\perp\cap\mathcal{C}(Z)$).
+- $\hat{\boldsymbol{\delta}}=(X^\top X)^{-1}X^\top(\boldsymbol{y}-Z\hat{\boldsymbol{\gamma}})=\hat{\boldsymbol{\beta}}-(X^\top X)^{-1}X^\top Z\hat{\boldsymbol{\gamma}}$ --- The coefficients of the new predictors are determined by the **innovations** in the new predictors **independently**, while the coefficients of the existing predictors should bear the linearly dependent component brought by the new predictors. 
+
+:::
+
+:::{.proof}
+Rewrite the model as $\mathbb{E}[Y|X,Z] = X\boldsymbol{\delta} + HZ\boldsymbol{\gamma} +  (I-H)Z\boldsymbol{\gamma} = (X+HZ)\tilde{\boldsymbol{\delta}}+(I-H)Z\boldsymbol{\gamma}$. Then, it follows
+$$
+  \begin{aligned}
+  \begin{pmatrix} \hat{\tilde{\boldsymbol{\delta}}} \\ \hat{\boldsymbol{\gamma}} \end{pmatrix} &= 
+  \left(\begin{pmatrix}
+    (X + HZ)^\top \\ Z^\top(I-H)
+  \end{pmatrix}
+  \begin{pmatrix}
+    X + HZ & (I-H)Z
+  \end{pmatrix}\right)^{-1}
+  \begin{pmatrix}
+    (X + HZ)^\top \\ Z^\top(I-H)
+  \end{pmatrix}\boldsymbol{y} \\
+  &= \begin{pmatrix}
+    (X + HZ)^\top(X+HZ) & 0 \\
+    0 & Z^\top(I-H)Z
+  \end{pmatrix}^{-1}
+  \begin{pmatrix}
+    (X + HZ)^\top \\ Z^\top(I-H)
+  \end{pmatrix}\boldsymbol{y} \\
+  \implies \hat{\boldsymbol{\gamma}} &= (Z^\top R Z)^{-1}Z^\top R\boldsymbol{y}.
+  \end{aligned} 
+$$
+The second bullet point is obtained by plugging in $\hat{\boldsymbol{\gamma}}$ in which case the problem becomes regressing $\boldsymbol{y}-Z\hat{\boldsymbol{\gamma}}$ onto $X$.
+:::
+
+- Due to symmetry, $\hat{\boldsymbol{\delta}}$ can also be viewed as an independent regression coefficients on the innovations in $X$ against $Z$
+
+:::{.lemma name="Subspace relationships"}
+Let $H_X$, $H_Z$, and $H_{XZ}$ be the hat matrix when the predictors are $X$, $Z$, and both $X$ and $Z$, respectively. Similarly, we use $R_X$, $R_Z$, and $R_{XZ}$ to denote the corresponding orthogonal matrices.
+  
+  - $H_{XZ}$ is the projection onto $\mathcal{C}(X)\oplus \mathcal{C}(Z)$, while $R_{XZ}$ is the projection onto $\mathcal{C}(X)\cap \mathcal{C}(Z)$
+  - $R_{XZ}=R_XR_Z$ and $H_{XZ} = 1- R_{XZ}$
+
+:::
+
+::: {.theorem #est-res name="Residuals of additional predictors"}
+  - $R_{XZ}\boldsymbol{y}=R_X(\boldsymbol{y}-Z\hat{\boldsymbol{\gamma}})=R_{Z}(\boldsymbol{y}-X\hat{\boldsymbol{\delta}})$
+  - $\textrm{RSS} = (\boldsymbol{y}-Z\hat{\boldsymbol{\gamma}})^\top R_X(\boldsymbol{y}-Z\hat{\boldsymbol{\gamma}})=\boldsymbol{y}^\top R_X\boldsymbol{y}-\hat{\boldsymbol{\gamma}}^\top Z^\top R_X\boldsymbol{y}$
+
+:::
+
+::: {.proof}
+  The second bullet point follows from $R_X\boldsymbol{y}-R_XZ\hat{\boldsymbol{\gamma}}\perp R_X\boldsymbol{y}$ as projecting $\boldsymbol{y}$ onto the $X$-residualized $Z$ is the same as projecting the $X$-residualized $\boldsymbol{y}$ onto $X$-residualized $Z$.
+:::
+
+  
+## R Example {#est-exmp}
+
+``` {r}
+library(faraway)
+data(gala)
+temp = lm(Species ~ Area + Elevation + Nearest + Scruz + Adjacent, data=gala)
+summary(temp)
+```
+
+  - *Estimate*: OLS estimation of $\boldsymbol{\beta}$
+  - *Std. Error*: estimated standard deviation of $\beta_i$'s (i.e., $\sqrt{\hat{\sigma}^2(X^\top X)_{ii}^{-1}}$)
+  - *Residual standard error*: $\hat{\sigma}$ where *degrees of freedom* is $n-p-1$
+  
+  

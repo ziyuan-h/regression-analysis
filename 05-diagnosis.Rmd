@@ -1,0 +1,272 @@
+# Diagnostics
+
+## Checking Error Assumptions
+
+### Constant Noise Variance
+
+*Residual plot* plots residuals $\hat{\varepsilon}_i$ against predictions $\hat{y}_i$. It can be used to check
+
+- *Linear mean*: linear model (i.e., $\mathbb{E}[Y|X]=X\boldsymbol{\beta}$) implies $\textrm{Cov}(\hat{\boldsymbol{\varepsilon},\hat{\boldsymbol{y}}})=\widehat{\textrm{Cov}}(\hat{\boldsymbol{\varepsilon}},\hat{\boldsymbol{y}})=0$. So, the plot should display no pattern but appear as a evenly spread horizontal band of points with mean zero.
+
+  - For population covariance, notice 
+  $$
+    \textrm{Cov}(\hat{\boldsymbol{\varepsilon}},\hat{\boldsymbol{y}}) = \textrm{Cov}((I-H)\boldsymbol{y},H\boldsymbol{y}) = (I-H)\textrm{Var}(\boldsymbol{y})H^\top=\sigma^2(I-H)H^\top = 0
+  $$
+  where $H$ is the hat matrix $X(X^\top X)^{-1}X^\top$.
+  
+    *This derivation used the homoscedasticity and independence of the noise distribution.*
+  
+  - For sample covariance, recall $\sum_{i\in[n]}\hat{\varepsilon}_i=0$ as $\hat{\boldsymbol{\varepsilon}}\in\mathcal{C}(X)^\perp$ and $\mathbb{1}\in\mathcal{C}(X)$. Then, we have
+  $$
+    \sum_{i\in[n]}(\hat{\varepsilon}_i-\bar{\hat{\varepsilon}})(\hat{y}_i-\bar{\hat{y}}) = \sum_{i\in[n]}\hat{\varepsilon}_i(\hat{y}_i-\bar{\hat{y}}) = \sum_{i\in[n]}\hat{\varepsilon}_i\hat{y}_i=\hat{\boldsymbol{\varepsilon}}^\top\hat{\boldsymbol{y}} = \boldsymbol{y}^\top(I-H)H\boldsymbol{y} = 0.
+  $$
+    *This derivation is independent of the noise distribution as all elements are determined by the algorithm.*
+
+- *Homoscedasticity* and *heteroscedasticity*: whether the dispersion of $\hat{\varepsilon}_i$ is constant (resp. increases) in $\hat{y}_i$ for homoscedasticity (resp. heteroscedasticity).
+
+```{r}
+library(faraway)
+data(savings)
+result <- lm(sr ~ pop15 + pop75 + dpi + ddpi, savings)
+plot(result$fitted, result$residual, xlab="Fitted", ylab="Residuals")  # ehat v.s. yhat
+abline(h=0)
+plot(result$fitted, abs(result$residual), xlab="Fitted", ylab="|Residuals|")  # |ehat| v.s. yhat
+summary(lm(abs(result$residual) ~ result$fitted))
+```
+
+- The last method regress $|\hat{\varepsilon}_i|$^[Must have the absolute value as we are testing for *variance*.] onto $\hat{y}_i$ and test $H_0:\beta_1=0$ v.s. $H_A:\beta_1\neq 0$.
+
+### Checking Noise Normality
+#### QQ-plot
+- Sort the residuals $\hat{\varepsilon}_{[1]}\leq \hat{\varepsilon}_{[2]}\leq \dots\leq \hat{\varepsilon}_{[n]}$ --- *order statistic*
+- Compute the $n$ percentiles $u_i = F^{-1}\left(\frac{i}{n+1}\right)$ where $F$ is the CDF of the testing distribution
+- Plot $\hat{\varepsilon}_{[i]}$ against $u_i$
+- The data follows the distribution if the scatter points lie on a straight line
+
+```{r}
+## Example QQ plot
+qqnorm(result$residual, ylab="Residuals")
+qqline(result$residual)
+```
+
+*Remarks*
+
+- Should be tested after ensuring linear mean and constant noise variance
+- Possibilities of non-normality (both 1 and 2 are heavy-tailed distribution):
+  1. Skewed distribution: log-normal
+  2. Long-tailed distribution: Cauchy
+  3. Short-tailed distribution: uniform with finite support
+
+### Shapiro-Wilk test for normality
+
+$H_0$: $x_1,\dots,x_n$ are sampled from a normally distributed population
+
+```{r}
+shapiro.test(result$residual)
+```
+
+Shapiro-Wilk test is not very helpful compared to QQ plot because
+
+- When $n$ is small, the test has little power
+- When $n$ is large, we can use the asymptotic distribution (e.g., central limit theorem) to do inference (i.e., hypothesis tests or CI).^[Notice that we only requires normality in the inference step.]
+
+
+## Finding Unusual Points
+
+- *Outliers*: large difference between the response $y_i$ and the mean $\boldsymbol{x}_i^\top\boldsymbol{\beta}$ 
+- *High-leverage points*: large difference between the predictor vector $\boldsymbol{x}_i$ for the $i$th case and the center of the $X$-data
+
+### Leverage
+
+The *leverage* of a point $i$ is $h_i:=H_{ii}$ where $H$ is the hat matrix $H:=X(X^\top X)^{-1}X^\top$.
+
+1. $h_i$ depends on on $X$
+2. $\textrm{Var}(\hat{\varepsilon}_i)=\sigma^2(1-h_i)$
+3. $\sum_{i\in[n]}h_i=\textrm{Tr}(H)=p+1$
+4. $\frac{1}{n}\leq h_i \leq 1$ for all $i\in[n]$
+    
+
+*Remarks*
+
+- Average leverage is $\frac{p+1}{n}$, so generally leverage larger than $\frac{2(p+1)}{n}$ can be considered high
+- Let $\tilde{\boldsymbol{x}}$ be the "reduced" data by removing the first constant value.  Then,
+  $$
+    h_i=\frac{1}{n}+(\tilde{\boldsymbol{x}}_i-\bar{\tilde{\boldsymbol{x}}})^\top(\tilde{X}_C^\top\tilde{X}_C)^{-1}(\tilde{\boldsymbol{x}}_i-\bar{\tilde{\boldsymbol{x}}})
+  $$
+  where $\tilde{X}_C=\begin{bmatrix}(\tilde{\boldsymbol{x}}_1-\bar{\boldsymbol{x}}) & \dots & (\tilde{\boldsymbol{x}}_n-\bar{\boldsymbol{x}})\end{bmatrix}^\top$
+  
+
+  
+### Half-normal Plot
+
+- Sort $h_{[1]}\leq h_{[2]}\leq \dots \leq h_{[n]}$
+- Compute $u_i=F^{-1}\left(\frac{i}{n+1}\right)$ for $i\in[n]$
+- Plot $h_{[i]}$ v.s. $u_i$
+- A high-leverage point usually diverges from the rest of the points.
+
+```{r}
+## Example for half normal test, high-leverage points usually have large-deviating predictor values 
+data(savings)
+result <- lm(sr ~ ., data=savings)
+halfnorm(lm.influence(result)$hat, nlab=2, ylab="Leverage")
+savings[c(44,49),]
+```
+
+### Studentized Residuals
+
+*Studentized residuals* rescales the residual for unit variance using the leverage of that data point:
+
+$$
+  r_i=\frac{\hat{\varepsilon}_i}{\hat{\sigma}\sqrt{1-h_i}}
+$$
+
+::: {.theorem}
+$\frac{r_i^2}{n-p-1}\sim\textrm{Beta}(\frac{1}{2},\frac{n-p-2}{2})$.
+:::
+
+::: {.proof}
+  $$
+    \frac{r_i^2}{n-p-1} = \frac{\hat{\varepsilon}_i^2/(\sigma^2(1-h_i))}{\hat{\sigma}^2/\sigma^2}.
+  $$
+It directly follows that $\hat{\varepsilon}_i^2/(\sigma^2(1-h_i))\sim\chi_1^2$ and $\hat{\sigma}^2/\sigma^2\sim\chi_{n-p-1}^2$. However, it's not $F$-distribution because they are not independent. 
+Let $\boldsymbol{\varepsilon}\sim\mathcal{N}_n(\boldsymbol{0},I)$ the above expression is equivalent to $\frac{r_i^2}{n-p-1}\sim\frac{\boldsymbol{\varepsilon}^\top R^\top\boldsymbol{e}_i\boldsymbol{e}_i^\top R\boldsymbol{\varepsilon}/(1-h_i)}{\boldsymbol{\varepsilon}^\top R\boldsymbol{\varepsilon}}=:\frac{\boldsymbol{\varepsilon}^\top Q\boldsymbol{\varepsilon}}{\boldsymbol{\varepsilon}^\top R\boldsymbol{\varepsilon}}$ where $\boldsymbol{e}_i$ is the $i$-th unit vector. First notice that $Q$ is symmetric and 
+$$
+  Q^2 = R^\top\boldsymbol{e}_i\boldsymbol{e}_i^\top RR\boldsymbol{e}_i\boldsymbol{e}_i^\top R/(1-h_i)^2=R\boldsymbol{e}_i\boldsymbol{e}_i^\top R/(1-h_i)=Q.
+$$
+Thus, $Q$ is a projection matrix. Notice that $\boldsymbol{\varepsilon}^\top R\boldsymbol{\varepsilon}-\boldsymbol{\varepsilon}^\top Q\boldsymbol{\varepsilon}=\boldsymbol{\varepsilon}^\top(R-Q)\boldsymbol{\varepsilon}$ since $RQ=QR=Q$. The last step is to show that $\boldsymbol{\varepsilon}^\top(R-Q)\boldsymbol{\varepsilon}$ is independent of $\boldsymbol{\varepsilon}^\top Q\boldsymbol{\varepsilon}$. This is straightforward because $(R-Q)\boldsymbol{\varepsilon}$ is independent of $Q\boldsymbol{\varepsilon}$ and the numerator and denominator are functions of each of them.
+:::
+
+- Notice $r_i$ does not follow $t$-distribution because the numerator and denominator are not independent. A general form of $t$-distribution requires the numerator and denominator lying on orthogonal subspaces.
+- Studentized residuals are generally preferred than raw data in diagnostic plots (e.g., QQ-plot or residual plots).
+
+
+
+### Externally Studentized Residuals
+
+Exclude point $i$ and estimate $\hat{\boldsymbol{\beta}}_{(i)}$ using the rest $n-1$ points. Compute $\hat{y}_{(i)}=\boldsymbol{x}_i\hat{\boldsymbol{\beta}}_{(i)}$.
+
+The *externally studentized residual* define the residual as the prediction error:
+$$
+\begin{aligned}
+  t_i &= \frac{y_i-\hat{y}_{(i)}}{\hat{\sigma}_{(i)}\sqrt{1+\boldsymbol{x}_i^\top (X_{(i)}^\top X_{(i)})^{-1}\boldsymbol{x}_i}} \sim t_{(n-1)-(p+1)}
+\end{aligned}
+$$
+
+::: {.theorem}
+The externally studentized residual has two equivalent forms
+$$
+ t_i=\frac{\hat{\varepsilon}_i}{\hat{\sigma}_{(i)}\sqrt{1-h_i}}=r_i\left(\frac{n-(p+1)-1}{n-(p+1)-r_i^2}\right)^{1/2}
+$$
+:::
+::: {.proof}
+  
+:::
+
+- The first term is a contrast to the (internally) studentized residual
+- The second line offers easier computation method: only need to do one regression with all $n$ points
+- A reasonable of 
+
+### Multiple Hypothesis Tests
+  
+Since we need to repeat the test $n$ times (on $H_0$ --- observation $i$ is an outlier), we need to apply some adjustment to the significance level to avoid excess rejection on the set level.
+
+#### Bonferroni Correction
+
+$$
+  \begin{aligned}
+  \textrm{Type I Error} &= \mathbb{P}_{H_0}(\textrm{reject at least one test}) \\
+  &\leq \sum_{i\in[n]}\mathbb{P}_{H_0}(\textrm{reject test }i) \\
+  &=n\alpha^{\textrm{adj}} \approx \alpha
+  \end{aligned}
+$$
+  
+So, instead we test each observation with significance level $\alpha/n$.
+  
+  
+### Influential Points
+
+An *influential point* is one whose removal from the d4ataset would cause a large change in the fit. Outliers or high-leverage points can both be influential points.
+  
+:::{.definition name="Cook's Distance"}
+*Cook statistic* is defined as
+$$
+  \begin{aligned}
+  D_i&=\frac{(\hat{y}_i-\hat{y}_{(i)})^\top(\hat{y}_i-\hat{y}_{(i)})}{\hat{\sigma}(p+1)} \\
+  &= \frac{1}{p+1}r_i^2\frac{h_i}{1-h_i}
+  \end{aligned}
+$$
+:::
+
+- Cook's statistic measures a combination of residual effect and leverage effect
+- In practice, usually 1 is used as a critical value for potential influential point
+
+```{r}
+data(savings)
+## Compute Cook's distance
+cook <- cooks.distance(result)
+halfnorm(cook, nlab=3, ylab="Cook's distance")
+
+## Fit the model without the influential point
+result.libya <- lm(sr ~ pop15 + pop75 + dpi + ddpi, data=savings, subset=(cook < max(cook)))
+summary(result.libya)
+
+## Compare this with the full summary pannel where the ddpi coefficient changes about 50%
+## and the R2 value increases by ~0.02
+## We don't like our model to be so sensitive to just one country
+summary(result)
+
+## Compute changes in coefficients
+## The lower left points are likely influential points
+## Add identify(result.inf$coef[, 2], result.inf$coef[, 3]) to enable interactive tools to identify
+## those points by clicking
+result.inf <- lm.influence(result)
+plot(result.inf$coef[,2], result.inf$coef[,3], xlab="Change in beta2", ylab="Change in beta3")
+
+## Print points 
+rownames(savings)[c(23, 46, 49)]
+
+## Fit the model w/o Japan
+result.japan <- lm(sr ~ pop15 + pop75 + dpi + ddpi, data=savings, subset=(rownames(savings)!="Japan"))
+summary(result.japan)
+```
+
+
+## Checking Model Structure
+
+Tests that imply the underlying structure of the model as well as suggestions on how to improve the structure of the model.
+
+### Exploratory analysis
+
+- Plot $y$ v.s. each individual $x_i$ to investigate the relationship and/or linearity between each individual predictor.
+- Usually done before fitting a model
+- *Drawback*: other predictors may affect the relationship between $y$ and $x_i$
+
+
+### Partial regression plot
+
+- Isolate the effect of $x_i$ on $y$
+- Regress $y$ on all $x$ except $x_i$, get residuals $\hat{\delta}$ --- take out effect of other $X$ from $y$
+- Regress $x_i$ on all $x$ except $x_i$, get residuals $\hat{\gamma}$ --- take out effect of other $X$ from $x_i$
+- Plot $\hat{\delta}$ v.s. $\hat{\gamma}$
+  - The slope is $\hat{\beta}_j$
+  - Can be used for linearity, outliers, and influential point tests
+
+``` {r}
+data(savings)
+## Partial regression plot
+result <- lm(sr ~ pop15 + pop75 + dpi + ddpi, data=savings)
+delta <- residuals(lm(sr ~ pop75 + dpi + ddpi, data=savings))
+gamma <- residuals(lm(pop15 ~ pop75 + dpi + ddpi, data=savings))
+plot(gamma,delta, xlab="Pop15 Residuals", ylab="Saving Residuals")
+temp <- lm(delta ~ gamma)
+abline(reg=temp)
+## The slope of the partial regression plot
+## Notice this is the same as beta(pop15) in the summary after this
+coef(temp)
+coef(result)
+```
+
+
+
+
+
