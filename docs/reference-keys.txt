@@ -23,6 +23,10 @@ def:unlabeled-div-30
 prerequisites
 regression-model
 continuous-random-variables
+common-test-statistics
+t-test
+f-test
+one-way-analysis-of-variance-anova
 estimation
 simple-linear-regression
 multiple-linear-regression

@@ -145,6 +145,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#regression-model"><i class="fa fa-check"></i><b>1.1</b> Regression Model</a></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#continuous-random-variables"><i class="fa fa-check"></i><b>1.2</b> Continuous Random Variables</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#common-test-statistics"><i class="fa fa-check"></i><b>1.3</b> Common Test Statistics</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="index.html"><a href="index.html#t-test"><i class="fa fa-check"></i><b>1.3.1</b> T-test</a></li>
+<li class="chapter" data-level="1.3.2" data-path="index.html"><a href="index.html#f-test"><i class="fa fa-check"></i><b>1.3.2</b> F-test</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>2</b> Estimation</a>
 <ul>
@@ -406,7 +411,61 @@ This is exactly the pdf of <span class="math inline">\(t_n\)</span>.</p>
 <div class="definition">
 <p><span id="def:unlabeled-div-14" class="definition"><strong>Definition 1.5  (F-distribution) </strong></span>Let <span class="math inline">\(U\sim\chi_m^2\)</span>, <span class="math inline">\(v\sim\chi_n^2\)</span>, and <span class="math inline">\(U,V\)</span> be independent. Then, <span class="math inline">\(\frac{U/m}{V/n}\sim F_{m,n}\)</span>, an <span class="math inline">\(F\)</span>-distribution with <span class="math inline">\(m\)</span> and <span class="math inline">\(n\)</span> degrees of freedom.</p>
 </div>
+</div>
+<div id="common-test-statistics" class="section level2 hasAnchor" number="1.3">
+<h2><span class="header-section-number">1.3</span> Common Test Statistics<a href="index.html#common-test-statistics" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="t-test" class="section level3 hasAnchor" number="1.3.1">
+<h3><span class="header-section-number">1.3.1</span> T-test<a href="index.html#t-test" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Three types of t-test:</p>
+<ul>
+<li><p>One-sample t-test: comparing the mean of a population and a constant
+<span class="math display">\[
+  T = \frac{\bar{X}-\mu}{\hat{\sigma}/\sqrt{n}}
+\]</span></p></li>
+<li><p>Independent t-test: comparing means of two <em>independent</em> populations</p>
+<ul>
+<li><p><em>Pooled standard deviation</em>: more precise estimation of the <em>fixed common</em> variance <span class="math inline">\(\sigma^2\)</span> under various populations with different means
+<span class="math display">\[
+\hat{\sigma}^2=s_p^2 = \frac{(n_1-1)s_1^2+(n_2-1)s_2^2}{n_1+n_2-2}
+\]</span>
+Reduces df by injecting info about group means: <span class="math inline">\((Y_1-\bar{Y},\dots,Y_n-\bar{Y})\)</span> is Gaussian in <span class="math inline">\(\Delta_{n-1}\)</span> simplex, while <span class="math inline">\((Y_{11}-\bar{Y}_1,\dots,Y_{nn_k}-\bar{Y}_k)\)</span> is Gaussian in the joint simplex <span class="math inline">\(\Delta_{n_1-1}\times\dots\times \Delta_{n_K-1}\)</span>.</p></li>
+<li><p>Statistic: <span class="math inline">\(T=\frac{\bar{X}_1-\bar{X}_2}{s_p}\)</span> with <span class="math inline">\(\textrm{df}=n_1+n_2-2\)</span>.</p></li>
+<li><p>For unequal variance, <a href="https://en.wikipedia.org/wiki/Student%27s_t-test#Equal_or_unequal_sample_sizes,_unequal_variances_(sX1_%3E_2sX2_or_sX2_%3E_2sX1)">Welch’s t-test or the exact method</a> may apply.</p></li>
+</ul></li>
+<li><p>Paired t-test: comparing means of <em>one population</em> before and after a treatment
+<span class="math display">\[
+  T = \frac{\bar{D}-\mu_D}{s_D/\sqrt{n}}
+\]</span>
+where <span class="math inline">\(\bar{D}\)</span> and <span class="math inline">\(s_D\)</span> are the average and sample standard deviation of the difference variables <span class="math inline">\(D_i = X_i^{\textrm{pre}} - X_i^\textrm{post}\)</span>.</p></li>
+</ul>
+</div>
+<div id="f-test" class="section level3 hasAnchor" number="1.3.2">
+<h3><span class="header-section-number">1.3.2</span> F-test<a href="index.html#f-test" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>F-test is a statistical test that compares whether the <em>variances of two populations are significantly different</em>.</li>
+<li>Usually formulated as the ratio two scaled sum of squares.</li>
+<li>These sums of squares are constructed so that the <strong>statistic tends to be greater when the null hypothesis is not true</strong>.</li>
+</ul>
+<div id="one-way-analysis-of-variance-anova" class="section level4 hasAnchor" number="1.3.2.1">
+<h4><span class="header-section-number">1.3.2.1</span> One-way Analysis of Variance (ANOVA)<a href="index.html#one-way-analysis-of-variance-anova" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Let there be <span class="math inline">\(K\)</span> groups. Each groups has <span class="math inline">\(n_k\)</span> data such that <span class="math inline">\(n_1+\dots,n_K=N\)</span>. Let <span class="math inline">\(Y_{ij}\)</span>, <span class="math inline">\(i\in[n_j]\)</span>, <span class="math inline">\(j\in[K]\)</span>, be the <span class="math inline">\(i\)</span>-th data in the <span class="math inline">\(j\)</span>-th group. Assume</p>
+<ul>
+<li>Residuals <span class="math inline">\(Y_{ij}-\bar{Y}_j\)</span> of each group are normal or approximately normal</li>
+<li>Residuals of each group have similar variance</li>
+<li>Data are independently sampled</li>
+</ul>
+<p>Then, the <span class="math inline">\(F\)</span> statistic is constructed by
+<span class="math display">\[
+  F = \frac{\textrm{between-group variance}}{\textrm{within-group variance}} = \frac{\sum_{j\in[K]}n_j(\bar{Y}_{j}-\bar{Y})^2/(K-1)}{\sum_{i\in[n_j],j\in[K]}(Y_{ij}-\bar{Y}_j)^2/(N-K)}.
+\]</span></p>
+<p><em>Remarks</em>:</p>
+<ul>
+<li><span class="math inline">\(F\sim F_{(K-1,N-K)}\)</span> when the null hypothesis — there is no significant difference in means among groups — is true</li>
+<li><em>Violation of the null hypothesis increases the statistic</em>: the within-group variance remains the same, while the between-group variance will significantly increase.</li>
+</ul>
 
+</div>
+</div>
 </div>
 </div>
             </section>

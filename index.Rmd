@@ -205,3 +205,59 @@ This is exactly the pdf of $t_n$.
 ::: {.definition name="F-distribution"}
   Let $U\sim\chi_m^2$, $v\sim\chi_n^2$, and $U,V$ be independent. Then, $\frac{U/m}{V/n}\sim F_{m,n}$, an $F$-distribution with $m$ and $n$ degrees of freedom.
 :::
+
+
+## Common Test Statistics
+
+### T-test
+
+Three types of t-test:
+
+- One-sample t-test: comparing the mean of a population and a constant
+  $$
+    T = \frac{\bar{X}-\mu}{\hat{\sigma}/\sqrt{n}}
+  $$
+
+- Independent t-test: comparing means of two *independent* populations
+  
+  - *Pooled standard deviation*: more precise estimation of the *fixed common* variance $\sigma^2$ under various populations with different means
+  $$
+    \hat{\sigma}^2=s_p^2 = \frac{(n_1-1)s_1^2+(n_2-1)s_2^2}{n_1+n_2-2}
+  $$
+  Reduces df by injecting info about group means: $(Y_1-\bar{Y},\dots,Y_n-\bar{Y})$ is Gaussian in $\Delta_{n-1}$ simplex, while $(Y_{11}-\bar{Y}_1,\dots,Y_{nn_k}-\bar{Y}_k)$ is Gaussian in the joint simplex $\Delta_{n_1-1}\times\dots\times \Delta_{n_K-1}$.
+  
+  - Statistic: $T=\frac{\bar{X}_1-\bar{X}_2}{s_p}$ with $\textrm{df}=n_1+n_2-2$.
+  - For unequal variance, [Welch's t-test or the exact method](https://en.wikipedia.org/wiki/Student%27s_t-test#Equal_or_unequal_sample_sizes,_unequal_variances_(sX1_%3E_2sX2_or_sX2_%3E_2sX1)) may apply.
+
+- Paired t-test: comparing means of *one population* before and after a treatment
+  $$
+    T = \frac{\bar{D}-\mu_D}{s_D/\sqrt{n}}
+  $$
+  where $\bar{D}$ and $s_D$ are the average and sample standard deviation of the difference variables $D_i = X_i^{\textrm{pre}} - X_i^\textrm{post}$.
+
+### F-test
+
+- F-test is a statistical test that compares whether the *variances of two populations are significantly different*.
+- Usually formulated as the ratio two scaled sum of squares.
+- These sums of squares are constructed so that the **statistic tends to be greater when the null hypothesis is not true**.
+
+#### One-way Analysis of Variance (ANOVA)
+
+Let there be $K$ groups. Each groups has $n_k$ data such that $n_1+\dots,n_K=N$. Let $Y_{ij}$, $i\in[n_j]$, $j\in[K]$, be the $i$-th data in the $j$-th group. Assume
+
+- Residuals $Y_{ij}-\bar{Y}_j$ of each group are normal or approximately normal
+- Residuals of each group have similar variance
+- Data are independently sampled
+
+Then, the $F$ statistic is constructed by
+$$
+  F = \frac{\textrm{between-group variance}}{\textrm{within-group variance}} = \frac{\sum_{j\in[K]}n_j(\bar{Y}_{j}-\bar{Y})^2/(K-1)}{\sum_{i\in[n_j],j\in[K]}(Y_{ij}-\bar{Y}_j)^2/(N-K)}.
+$$
+
+*Remarks*:
+
+- $F\sim F_{(K-1,N-K)}$ when the null hypothesis --- there is no significant difference in means among groups --- is true
+- *Violation of the null hypothesis increases the statistic*: the within-group variance remains the same, while the between-group variance will significantly increase.
+
+
+
