@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 Inference | Regression Analysis Notes</title>
+  <meta name="description" content="A study notes for regression analysis." />
+  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 3 Inference | Regression Analysis Notes" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="A study notes for regression analysis." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 Inference | Regression Analysis Notes" />
+  
+  <meta name="twitter:description" content="A study notes for regression analysis." />
+  
+
+<meta name="author" content="Ziyuan Huang" />
+
+
+<meta name="date" content="2025-10-22" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="estimation.html"/>
+<link rel="next" href="prediction.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#regression-model"><i class="fa fa-check"></i><b>1.1</b> Regression Model</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#continuous-random-variables"><i class="fa fa-check"></i><b>1.2</b> Continuous Random Variables</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>2</b> Estimation</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="estimation.html"><a href="estimation.html#simple-linear-regression"><i class="fa fa-check"></i><b>2.1</b> Simple Linear Regression</a></li>
+<li class="chapter" data-level="2.2" data-path="estimation.html"><a href="estimation.html#multiple-linear-regression"><i class="fa fa-check"></i><b>2.2</b> Multiple Linear Regression</a></li>
+<li class="chapter" data-level="2.3" data-path="estimation.html"><a href="estimation.html#error-analysis"><i class="fa fa-check"></i><b>2.3</b> Error Analysis</a></li>
+<li class="chapter" data-level="2.4" data-path="estimation.html"><a href="estimation.html#the-gauss-markov-theorem"><i class="fa fa-check"></i><b>2.4</b> The Gauss-Markov Theorem</a></li>
+<li class="chapter" data-level="2.5" data-path="estimation.html"><a href="estimation.html#introducing-predictors"><i class="fa fa-check"></i><b>2.5</b> Introducing Predictors</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="estimation.html"><a href="estimation.html#general-theory"><i class="fa fa-check"></i><b>2.5.1</b> General Theory</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="estimation.html"><a href="estimation.html#est-exmp"><i class="fa fa-check"></i><b>2.6</b> R Example</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="inference.html"><a href="inference.html"><i class="fa fa-check"></i><b>3</b> Inference</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="inference.html"><a href="inference.html#hypothesis-tests"><i class="fa fa-check"></i><b>3.1</b> Hypothesis Tests</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="inference.html"><a href="inference.html#t-statistic-and-f-statistic"><i class="fa fa-check"></i><b>3.1.1</b> T-statistic and F-statistic</a></li>
+<li class="chapter" data-level="3.1.2" data-path="inference.html"><a href="inference.html#test-whether-a-coefficient-beta_i-is-significant"><i class="fa fa-check"></i><b>3.1.2</b> Test whether a coefficient <span class="math inline">\(\beta_i\)</span> is significant</a></li>
+<li class="chapter" data-level="3.1.3" data-path="inference.html"><a href="inference.html#test-whether-a-pairsubset-can-be-excluded-from-the-model"><i class="fa fa-check"></i><b>3.1.3</b> Test whether a pair/subset can be excluded from the model</a></li>
+<li class="chapter" data-level="3.1.4" data-path="inference.html"><a href="inference.html#test-whether-the-pair-of-predictors-has-the-same-effect"><i class="fa fa-check"></i><b>3.1.4</b> Test whether the pair of predictors has the same effect</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="inference.html"><a href="inference.html#confidence-interval-ci"><i class="fa fa-check"></i><b>3.2</b> Confidence Interval (CI)</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>4</b> Prediction</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="prediction.html"><a href="prediction.html#prediction-interval"><i class="fa fa-check"></i><b>4.1</b> Prediction Interval</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="prediction.html"><a href="prediction.html#future-observation"><i class="fa fa-check"></i><b>4.1.1</b> Future observation</a></li>
+<li class="chapter" data-level="4.1.2" data-path="prediction.html"><a href="prediction.html#future-mean-response"><i class="fa fa-check"></i><b>4.1.2</b> Future mean response</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="prediction.html"><a href="prediction.html#r-example"><i class="fa fa-check"></i><b>4.2</b> R Example</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="diagnostics.html"><a href="diagnostics.html"><i class="fa fa-check"></i><b>5</b> Diagnostics</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="diagnostics.html"><a href="diagnostics.html#checking-error-assumptions"><i class="fa fa-check"></i><b>5.1</b> Checking Error Assumptions</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="diagnostics.html"><a href="diagnostics.html#constant-noise-variance"><i class="fa fa-check"></i><b>5.1.1</b> Constant Noise Variance</a></li>
+<li class="chapter" data-level="5.1.2" data-path="diagnostics.html"><a href="diagnostics.html#checking-noise-normality"><i class="fa fa-check"></i><b>5.1.2</b> Checking Noise Normality</a></li>
+<li class="chapter" data-level="5.1.3" data-path="diagnostics.html"><a href="diagnostics.html#shapiro-wilk-test-for-normality"><i class="fa fa-check"></i><b>5.1.3</b> Shapiro-Wilk test for normality</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="diagnostics.html"><a href="diagnostics.html#finding-unusual-points"><i class="fa fa-check"></i><b>5.2</b> Finding Unusual Points</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="diagnostics.html"><a href="diagnostics.html#leverage"><i class="fa fa-check"></i><b>5.2.1</b> Leverage</a></li>
+<li class="chapter" data-level="5.2.2" data-path="diagnostics.html"><a href="diagnostics.html#half-normal-plot"><i class="fa fa-check"></i><b>5.2.2</b> Half-normal Plot</a></li>
+<li class="chapter" data-level="5.2.3" data-path="diagnostics.html"><a href="diagnostics.html#studentized-residuals"><i class="fa fa-check"></i><b>5.2.3</b> Studentized Residuals</a></li>
+<li class="chapter" data-level="5.2.4" data-path="diagnostics.html"><a href="diagnostics.html#externally-studentized-residuals"><i class="fa fa-check"></i><b>5.2.4</b> Externally Studentized Residuals</a></li>
+<li class="chapter" data-level="5.2.5" data-path="diagnostics.html"><a href="diagnostics.html#multiple-hypothesis-tests"><i class="fa fa-check"></i><b>5.2.5</b> Multiple Hypothesis Tests</a></li>
+<li class="chapter" data-level="5.2.6" data-path="diagnostics.html"><a href="diagnostics.html#influential-points"><i class="fa fa-check"></i><b>5.2.6</b> Influential Points</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="diagnostics.html"><a href="diagnostics.html#checking-model-structure"><i class="fa fa-check"></i><b>5.3</b> Checking Model Structure</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="diagnostics.html"><a href="diagnostics.html#exploratory-analysis"><i class="fa fa-check"></i><b>5.3.1</b> Exploratory analysis</a></li>
+<li class="chapter" data-level="5.3.2" data-path="diagnostics.html"><a href="diagnostics.html#partial-regression-plot"><i class="fa fa-check"></i><b>5.3.2</b> Partial regression plot</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="problem-with-predictors.html"><a href="problem-with-predictors.html"><i class="fa fa-check"></i><b>6</b> Problem with Predictors</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="problem-with-predictors.html"><a href="problem-with-predictors.html#errors-in-predictors"><i class="fa fa-check"></i><b>6.1</b> Errors in predictors</a></li>
+<li class="chapter" data-level="6.2" data-path="problem-with-predictors.html"><a href="problem-with-predictors.html#change-of-scale"><i class="fa fa-check"></i><b>6.2</b> Change of scale</a></li>
+<li class="chapter" data-level="6.3" data-path="problem-with-predictors.html"><a href="problem-with-predictors.html#standardize-variables"><i class="fa fa-check"></i><b>6.3</b> Standardize Variables</a></li>
+<li class="chapter" data-level="6.4" data-path="problem-with-predictors.html"><a href="problem-with-predictors.html#colinearity"><i class="fa fa-check"></i><b>6.4</b> Colinearity</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="problem-with-error.html"><a href="problem-with-error.html"><i class="fa fa-check"></i><b>7</b> Problem with Error</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="problem-with-error.html"><a href="problem-with-error.html#section"><i class="fa fa-check"></i><b>7.1</b> </a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Regression Analysis Notes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="inference" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">Chapter 3</span> Inference<a href="inference.html#inference" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>A methodology to draw conclusions about the unknown population parameters <span class="math inline">\(\beta_0,\dots,\beta_p\)</span> from the estimators <span class="math inline">\(\hat{\beta}_0,\dots,\hat{\beta}_p\)</span>.</p>
+<div id="hypothesis-tests" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Hypothesis Tests<a href="inference.html#hypothesis-tests" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="procedure" class="section level4 unnumbered hasAnchor">
+<h4>Procedure<a href="inference.html#procedure" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Consider a null hypothesis <span class="math inline">\(H_0\)</span> and an alternative hypothesis <span class="math inline">\(H_A\)</span>. Define <em>p-value</em> as:
+<span class="math display">\[
+  \mathbb{P}(\textrm{observed or more extreme departure from }H_0\textrm { in favor of }H_A|H_0\textrm{ is true}).
+\]</span>
+Given a predetermined significance level <span class="math inline">\(\alpha\in(0,1)\)</span>, we reject the null hypothesis if p-value <span class="math inline">\(&lt;\alpha\)</span>.</p>
+</div>
+<div id="assumption" class="section level4 unnumbered hasAnchor">
+<h4>Assumption<a href="inference.html#assumption" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>To compute the p-value, we need to make assumptions about the model distribution:</p>
+<p><span class="math display">\[
+  \varepsilon\sim \mathcal{N}_n(\boldsymbol{0},\sigma^2I).
+\]</span>
+Then, <span class="math inline">\(\hat{\boldsymbol{\beta}}\sim\mathcal{N}_p(\boldsymbol{\beta}, \sigma^2(X^\top X)^{-1})\)</span> — <em>sample distribution</em> of the statistic <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span>.</p>
+</div>
+<div id="t-statistic-and-f-statistic" class="section level3 hasAnchor" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> T-statistic and F-statistic<a href="inference.html#t-statistic-and-f-statistic" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Based on the normality assumption, we can now derive the distribution of the <span class="math inline">\(t\)</span>-statistic (Theorem <a href="inference.html#thm:t-statistic">3.1</a>) and the <span class="math inline">\(F\)</span>-statistic (Theorem <a href="inference.html#thm:f-statistic">3.2</a>) as follows.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-24" class="definition"><strong>Definition 3.1  (Standard error) </strong></span>The <em>standard error</em> (SE) of a statistic (usually an estimator of a parameter, like the average or mean) is the standard deviation of its sampling distribution.</p>
+</div>
+<p>The standard error of <span class="math inline">\(\hat{\beta}_i\)</span> is
+<span class="math display">\[
+  \textrm{se}(\hat{\beta}_i) = \sqrt{\sigma^2(X^\top X)^{-1}_{ii}}
+\]</span>
+which can be estimated by (biased)
+<span class="math display">\[
+  \widehat{\textrm{se}}(\hat{\beta}_i) = \sqrt{\hat{\sigma}^2(X^\top X)^{-1}_{ii}}.
+\]</span></p>
+<div class="theorem">
+<p><span id="thm:t-statistic" class="theorem"><strong>Theorem 3.1  (t-statistic) </strong></span><span class="math inline">\(T:=\frac{\hat{\beta_j}-\beta_j}{\widehat{\textrm{se}}(\hat{\beta}_j)}\sim t_{n-(p+1)}\)</span>. This is in contrast to that <span class="math inline">\(\frac{\hat{\beta_j}-\beta_j}{{\textrm{se}}(\hat{\beta}_j)}\sim \mathcal{N}(0,1)\)</span></p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-25" class="proof"><em>Proof</em>. </span>It is sufficient to show <span class="math inline">\(\frac{\widehat{\textrm{se}}(\hat{\beta}_j)}{{\textrm{se}}(\hat{\beta}_j)}=\sqrt{\frac{\hat{\sigma}^2}{\sigma^2}}\sim \sqrt{\frac{\chi^2_{n-p-1}}{n-p-1}}\)</span>. Define the projection matrix <span class="math inline">\(\hat{H}:=I-X(X^\top X)^{-1}X^\top\)</span>. So, we have
+<span class="math display">\[
+\begin{aligned}
+  \hat{\sigma}^2 &amp;= \frac{1}{n-p-1}\boldsymbol{y}^\top H\boldsymbol{y} \\
+  &amp;=\frac{1}{n-p-1}\bigg(\varepsilon^\top H\varepsilon + \underbrace{2\varepsilon^\top HX\boldsymbol{\beta} + \boldsymbol{\beta}^\top X^\top H X\boldsymbol{\beta}}_{=0\textrm{ by projection theorem}}\bigg) \\
+  &amp;=\frac{1}{n-p-1}\varepsilon^\top\left(\sum_{i=1}^{n-p-k}\boldsymbol{u}_i\boldsymbol{u}_i^\top\right)\varepsilon \\
+  &amp;= \frac{1}{n-p-1}\sum_{i=1}^{n-p-1}(\boldsymbol{u}_i^\top\varepsilon)^2
+\end{aligned}
+\]</span>
+where <span class="math inline">\(\boldsymbol{u}_i\)</span>’s are the eigenvectors of <span class="math inline">\(H\)</span> associated with the <span class="math inline">\(n-p-1\)</span> non-zero eigenvalues. Since <span class="math inline">\(\lVert \boldsymbol{u}_i\lVert_2=1\)</span>, we have <span class="math inline">\(\boldsymbol{u}_i^\top\varepsilon\sim\mathcal{N}(\boldsymbol{0},\boldsymbol{u}_i^\top(\sigma^2I)\boldsymbol{u}_i)=\mathcal{N}(\boldsymbol{0},\sigma^2I)\)</span>. Therefore, we have <span class="math inline">\((n-p-1)\hat{\sigma}^2/\sigma^2\sim \chi_{n-p-1}^2\)</span>.</p>
+</div>
+<div class="theorem">
+<p><span id="thm:f-statistic" class="theorem"><strong>Theorem 3.2  (F-statistic) </strong></span>Suppose <span class="math inline">\(H_0\)</span> claims a subset (<span class="math inline">\(\geq1\)</span>) of predictors as insignificant (e.g., <span class="math inline">\(H_0:p_1=p_2=0\)</span>) and <span class="math inline">\(H_A\)</span> is the alternative. Fit a model under each of <span class="math inline">\(H_0\)</span> and <span class="math inline">\(H_0\cup H_A\)</span> and compute <span class="math inline">\(RSS_{H_0}\)</span> and <span class="math inline">\(RSS_{H_A}\)</span> respectively. Then,
+<span class="math display">\[
+  F:=\frac{(\textrm{RSS}_{H_0}-\textrm{RSS}_{H_0\cup H_A})/(\text{df}_{H_0}-\text{df}_{H_0\cup H_A})}{\textrm{RSS}_{H_0\cup H_A}/\textrm{df}_{H_0\cup H_A}}
+\]</span>
+follows <span class="math inline">\(F\)</span>-distribution with degrees of freedom <span class="math inline">\(\text{df}_{H_0}-\text{df}_{H_0\cup H_A}\)</span> and <span class="math inline">\(\textrm{df}_{H_0\cup H_A}\)</span>.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-26" class="proof"><em>Proof</em>. </span>Following the proof of Theorem <a href="inference.html#thm:t-statistic">3.1</a>, we know that <span class="math inline">\(\frac{\textrm{RSS}_{H_0}}{\textrm{df}_{H_0}}=\hat{\sigma}_{H_0}^2\sim\chi_{\textrm{df}_{H_0}}^2\)</span>. Then, the result follows readily from the additivity of chi-squared distribution and the definition of <span class="math inline">\(F\)</span>-distribution.</p>
+</div>
+<ul>
+<li>Here, <span class="math inline">\(H_0\)</span> and <span class="math inline">\(H_A\)</span> should be treated as sets of predictors that are not excluded (due to insignificance). Notice in the <span class="math inline">\(F\)</span>-statistic, the actual alternative hypothesis is <span class="math inline">\(H_0\cup H_A\)</span>, which must be a <strong>superset</strong> of the null hypothesis (or using more predictors). For example, <span class="math inline">\(F\)</span>-test can test <span class="math inline">\(H_0:\beta_1=\beta_2=0\)</span> and <span class="math inline">\(H_A:\beta_1=0\)</span>, but cannot test <span class="math inline">\(H_0:\beta_1=\beta_2=0\)</span> and <span class="math inline">\(H_A:\beta_1=\beta_3=0\)</span>.</li>
+</ul>
+</div>
+<div id="test-whether-a-coefficient-beta_i-is-significant" class="section level3 hasAnchor" number="3.1.2">
+<h3><span class="header-section-number">3.1.2</span> Test whether a coefficient <span class="math inline">\(\beta_i\)</span> is significant<a href="inference.html#test-whether-a-coefficient-beta_i-is-significant" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><span class="math inline">\(H_0:\beta_i=0\)</span> and <span class="math inline">\(H_A:\beta_i\neq 0\)</span> (or more generally <span class="math inline">\(H_0:\beta_i=c\)</span> for some constant <span class="math inline">\(c\)</span>)</p>
+<ul>
+<li><p>(two-sided) <span class="math inline">\(t\)</span>-test: p-value = <span class="math inline">\(\mathbb{P}(|\hat{\beta}_i|\geq \hat{\beta}_i(\mathcal{D})|H_0) = 1 -\textrm{CDF}_{t_{n-p-1}}\left( \frac{\hat{\beta}_i(\mathcal{D})}{\widehat{\textrm{se}}(\hat{\beta}_i)}\right)\)</span><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p></li>
+<li><p><span class="math inline">\(F\)</span>-test: p-value = <span class="math inline">\(1-\textrm{CDF}_{F_{1,n-p-1}}(\hat{F}(\mathcal{D}))\)</span> where <span class="math inline">\(\hat{F}(\mathcal{D})\)</span> is the <span class="math inline">\(F\)</span>-statistic in Theorem <a href="inference.html#thm:f-statistic">3.2</a></p></li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="inference.html#cb3-1" tabindex="-1"></a>  <span class="fu">data</span>(savings)</span>
+<span id="cb3-2"><a href="inference.html#cb3-2" tabindex="-1"></a>  h0 <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> pop15 <span class="sc">+</span> dpi <span class="sc">+</span> ddpi, savings)  <span class="co"># Model under H0</span></span>
+<span id="cb3-3"><a href="inference.html#cb3-3" tabindex="-1"></a>  h0a <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> pop15 <span class="sc">+</span> pop75 <span class="sc">+</span> dpi <span class="sc">+</span> ddpi, savings)  <span class="co"># Model under H0 + HA</span></span>
+<span id="cb3-4"><a href="inference.html#cb3-4" tabindex="-1"></a>  <span class="fu">anova</span>(h0, h0a)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: sr ~ pop15 + dpi + ddpi
+## Model 2: sr ~ pop15 + pop75 + dpi + ddpi
+##   Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)
+## 1     46 685.95                           
+## 2     45 650.71  1    35.236 2.4367 0.1255</code></pre>
+<ul>
+<li><p>For single predictor testing, the <span class="math inline">\(F\)</span>-test and two-sided <span class="math inline">\(t\)</span>-test are equivalent because <span class="math inline">\(T^2=F\)</span> (statistics equal) and <span class="math inline">\(t_n=F_{1,n}\)</span> (distributions equal)</p>
+<p>By Theorem <a href="estimation.html#thm:est-res">2.3</a>,
+<span class="math display">\[
+  \textrm{RSS}_{H_0}-\textrm{RSS}_{H_0\cup H_A} = \hat{\beta}_i\boldsymbol{x}_i^\top \tilde{R}\boldsymbol{y} = \frac{(\boldsymbol{x}_i^\top \tilde{R}\boldsymbol{y})^2}{\boldsymbol{x}_i^\top\tilde{R}\boldsymbol{x}_i}=\hat{\beta}_i^2\boldsymbol{x}_i^\top\tilde{R}\boldsymbol{x}_i
+\]</span>
+where <span class="math inline">\(\tilde{R}\)</span> is the residual matrix of the <span class="math inline">\(n-1\)</span> predictors without <span class="math inline">\(\boldsymbol{x}_i\)</span>. The last piece is completed by <span class="math inline">\(\boldsymbol{x}_i^\top\tilde{R}\boldsymbol{x}_i=(X^\top X)_{ii}^{-1}\)</span> using block matrix inversion:
+<span class="math display">\[
+  \begin{aligned}
+  (X^\top X)^{-1} &amp;= \begin{pmatrix}
+    \tilde{X}^\top \tilde{X} &amp; \tilde{X}^\top\boldsymbol{x}_i \\
+    \boldsymbol{x}_i^\top \tilde{X} &amp; \boldsymbol{x}_i^\top \boldsymbol{x}_i
+  \end{pmatrix}^{-1} \\
+  &amp;= \begin{pmatrix}
+    \ast &amp; \ast \\
+    \ast &amp; \left(\boldsymbol{x}_i^\top\boldsymbol{x}_i-\boldsymbol{x}_i^\top\tilde{X}(\tilde{X}^\top\tilde{X})^{-1}\tilde{X}^\top\boldsymbol{x}_i\right)^{-1}
+  \end{pmatrix} \\
+  &amp;= \begin{pmatrix} \ast &amp; \ast \\ \ast &amp; \left(\boldsymbol{x}_i\tilde{R}\boldsymbol{x}_i\right)^{-1} \end{pmatrix}.
+  \end{aligned}
+\]</span></p></li>
+</ul>
+</div>
+<div id="test-whether-a-pairsubset-can-be-excluded-from-the-model" class="section level3 hasAnchor" number="3.1.3">
+<h3><span class="header-section-number">3.1.3</span> Test whether a pair/subset can be excluded from the model<a href="inference.html#test-whether-a-pairsubset-can-be-excluded-from-the-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><span class="math inline">\(H_0:\beta_1=\beta_2=0\)</span> and <span class="math inline">\(H_A:\neg H_0\)</span></p>
+<ul>
+<li>Standard application of <span class="math inline">\(F\)</span>-test</li>
+<li>Test whether any of the predictors are useful: <span class="math inline">\(H_0:\beta_1=\dots=\beta_p=0\)</span> (not including the intercept).<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="inference.html#cb5-1" tabindex="-1"></a>  <span class="fu">data</span>(savings)</span>
+<span id="cb5-2"><a href="inference.html#cb5-2" tabindex="-1"></a>  h0 <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> pop15 <span class="sc">+</span> ddpi, savings)  <span class="co"># Model under H0</span></span>
+<span id="cb5-3"><a href="inference.html#cb5-3" tabindex="-1"></a>  h0a <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> pop15 <span class="sc">+</span> pop75 <span class="sc">+</span> dpi <span class="sc">+</span> ddpi, savings)  <span class="co"># Model under H0 + HA</span></span>
+<span id="cb5-4"><a href="inference.html#cb5-4" tabindex="-1"></a>  <span class="fu">anova</span>(h0, h0a)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: sr ~ pop15 + ddpi
+## Model 2: sr ~ pop15 + pop75 + dpi + ddpi
+##   Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)
+## 1     47 700.55                           
+## 2     45 650.71  2    49.839 1.7233   0.19</code></pre>
+</div>
+<div id="test-whether-the-pair-of-predictors-has-the-same-effect" class="section level3 hasAnchor" number="3.1.4">
+<h3><span class="header-section-number">3.1.4</span> Test whether the pair of predictors has the same effect<a href="inference.html#test-whether-the-pair-of-predictors-has-the-same-effect" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><span class="math inline">\(H_0:\beta_1=\beta_2\)</span> and <span class="math inline">\(H_A:\beta_1\neq \beta_2\)</span></p>
+<p>Use <span class="math inline">\(F\)</span>-statistic. Under <span class="math inline">\(H_0\)</span>, we have <span class="math inline">\(\mathbb{E}[Y|X] = \beta_0+\beta_1(X_1+X_2)+\beta_3X_3+\dots+\beta_pX_p\)</span>. <span class="math inline">\(H_A\)</span> is the original regression line.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="inference.html#cb7-1" tabindex="-1"></a>h0 <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> <span class="fu">I</span>(pop15 <span class="sc">+</span> pop75) <span class="sc">+</span> dpi <span class="sc">+</span> ddpi, savings)</span>
+<span id="cb7-2"><a href="inference.html#cb7-2" tabindex="-1"></a>h0a <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> pop15 <span class="sc">+</span> pop75 <span class="sc">+</span> dpi <span class="sc">+</span> ddpi, savings)</span>
+<span id="cb7-3"><a href="inference.html#cb7-3" tabindex="-1"></a><span class="fu">anova</span>(h0, h0a)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: sr ~ I(pop15 + pop75) + dpi + ddpi
+## Model 2: sr ~ pop15 + pop75 + dpi + ddpi
+##   Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)
+## 1     46 673.63                           
+## 2     45 650.71  1    22.915 1.5847 0.2146</code></pre>
+</div>
+</div>
+<div id="confidence-interval-ci" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Confidence Interval (CI)<a href="inference.html#confidence-interval-ci" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Given the normality assumption of the noise, the CI can be constructed directly from the distributions of <span class="math inline">\(\hat{\beta}_i\)</span>’s. Under significance level <span class="math inline">\(\alpha\)</span> or confidence <span class="math inline">\(1-\alpha\)</span>:</p>
+<ul>
+<li><p>Two-sided CI: <span class="math inline">\(\hat{\beta}_i\pm t_{n-p-1}^{({\color{red}\alpha}{\color{red}/}{\color{red}2})}\widehat{\textrm{se}}(\hat{\beta}_i)\)</span></p></li>
+<li><p>One-side CI: <span class="math inline">\(\big(-\infty,\hat{\beta}_i+t_{n-p-1}^{({\color{red}\alpha})}\widehat{\textrm{se}}(\hat{\beta}_i)\big]\)</span></p></li>
+<li><p>Simultaneous CI: notice
+<span class="math display">\[
+  \begin{aligned}
+  &amp;\frac{(\hat{\boldsymbol{\beta}}-\boldsymbol{\beta})^\top\left[\widehat{\textrm{se}}(\hat{\boldsymbol{\beta}})\right]^{-1}(\hat{\boldsymbol{\beta}}-\boldsymbol{\beta})}{p+1} \\
+  = &amp;\frac{(\hat{\boldsymbol{\beta}}-\boldsymbol{\beta})^\top(X^\top X)(\hat{\boldsymbol{\beta}}-\boldsymbol{\beta})}{(p+1)\hat{\sigma}^2} \\
+  =&amp;\frac{(\hat{\boldsymbol{\beta}}-\boldsymbol{\beta})^\top\left[{\textrm{se}}(\hat{\boldsymbol{\beta}})\right]^{-1}(\hat{\boldsymbol{\beta}}-\boldsymbol{\beta})/(p+1)}{\hat{\sigma}^2/\sigma^2}\sim F_{p+1,n-p-1}
+  \end{aligned}
+\]</span>
+To see the last term follows <span class="math inline">\(F_{p+1,n-p-1}\)</span>, suppose <span class="math inline">\(\boldsymbol{z}\sim\mathcal{N}_{p+1}(\boldsymbol{0},\Sigma)\)</span>, then we have
+<span class="math display">\[
+  \boldsymbol{z}^\top\Sigma^{-1}\boldsymbol{z}=\boldsymbol{e}^\top\Sigma^{1/2}\Sigma^{-1}\Sigma^{1/2}\boldsymbol{e}=\boldsymbol{e}^\top\boldsymbol{e}\sim\chi_{p+1}^2.
+  \]</span>
+We bound the statistic from above since <span class="math inline">\(F\)</span>-distribution is one-sided over <span class="math inline">\([0,\infty)\)</span> and we want to measure how close <span class="math inline">\(\boldsymbol{\beta}\)</span> is to <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span>. The result is <span class="math inline">\((\hat{\boldsymbol{\beta}}-\boldsymbol{\beta})^\top X^\top X(\hat{\boldsymbol{\beta}}-\boldsymbol{\beta})\leq (p+1)\hat{\sigma}^2F_{p+1,n-p-1}^{(\alpha)}\)</span>.</p></li>
+</ul>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="inference.html#cb9-1" tabindex="-1"></a><span class="fu">library</span>(ellipse)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;ellipse&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:graphics&#39;:
+## 
+##     pairs</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="inference.html#cb12-1" tabindex="-1"></a><span class="fu">data</span>(savings)</span>
+<span id="cb12-2"><a href="inference.html#cb12-2" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> pop15 <span class="sc">+</span> pop75 <span class="sc">+</span> dpi <span class="sc">+</span> ddpi, savings)  <span class="co"># estimate linear regression coefficients</span></span>
+<span id="cb12-3"><a href="inference.html#cb12-3" tabindex="-1"></a>conf <span class="ot">&lt;-</span> <span class="fu">confint</span>(result)  <span class="co"># compute confidence intervals for every predictor</span></span>
+<span id="cb12-4"><a href="inference.html#cb12-4" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">ellipse</span>(result, <span class="fu">c</span>(<span class="st">&#39;pop15&#39;</span>, <span class="st">&#39;pop75&#39;</span>)), <span class="at">type=</span><span class="st">&quot;l&quot;</span>, <span class="at">xlim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.9</span>,<span class="dv">0</span>))  <span class="co"># plot the confidence region</span></span>
+<span id="cb12-5"><a href="inference.html#cb12-5" tabindex="-1"></a><span class="fu">points</span>(result<span class="sc">$</span>coef[<span class="st">&#39;pop15&#39;</span>], result<span class="sc">$</span>coef[<span class="st">&#39;pop75&#39;</span>], <span class="at">pch=</span><span class="dv">18</span>)  <span class="co"># add the estimate to the plot</span></span>
+<span id="cb12-6"><a href="inference.html#cb12-6" tabindex="-1"></a><span class="fu">points</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="at">pch=</span><span class="dv">1</span>)  <span class="co"># add the origin to the plot</span></span>
+<span id="cb12-7"><a href="inference.html#cb12-7" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span>conf[<span class="st">&#39;pop15&#39;</span>,], <span class="at">lty=</span><span class="dv">2</span>)  <span class="co"># add the confidence interval for pop15</span></span>
+<span id="cb12-8"><a href="inference.html#cb12-8" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span>conf[<span class="st">&#39;pop75&#39;</span>,], <span class="at">lty=</span><span class="dv">2</span>)  <span class="co"># add the confidence interval for pop17</span></span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<ul>
+<li>Notice that simultaneous CI may contain points that are excluded by individual CI and vice versa.</li>
+</ul>
+
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="1">
+<li id="fn1"><p>The <code>t value</code> and <code>P(&gt;|t|)</code> fields are respectively the <span class="math inline">\(t\)</span>-statistic and the p-value of two-sided <span class="math inline">\(t\)</span>-test on whether that single parameter is significant (see Section <a href="estimation.html#est-exmp">2.6</a>).<a href="inference.html#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>This result is the last row of R <code>summary(lm(...))</code> output (see Section <a href="estimation.html#est-exmp">2.6</a>)<a href="inference.html#fnref2" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="estimation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="prediction.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": "https://github.com/rstudio/bookdown-demo/edit/master/02-inference.Rmd",
+    "text": "Edit"
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

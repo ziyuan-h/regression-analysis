@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Regression Analysis Notes</title>
+  <meta name="description" content="A study notes for regression analysis." />
+  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Regression Analysis Notes" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="A study notes for regression analysis." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Regression Analysis Notes" />
+  
+  <meta name="twitter:description" content="A study notes for regression analysis." />
+  
+
+<meta name="author" content="Ziyuan Huang" />
+
+
+<meta name="date" content="2025-10-22" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+<link rel="next" href="estimation.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#regression-model"><i class="fa fa-check"></i><b>1.1</b> Regression Model</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#continuous-random-variables"><i class="fa fa-check"></i><b>1.2</b> Continuous Random Variables</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>2</b> Estimation</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="estimation.html"><a href="estimation.html#simple-linear-regression"><i class="fa fa-check"></i><b>2.1</b> Simple Linear Regression</a></li>
+<li class="chapter" data-level="2.2" data-path="estimation.html"><a href="estimation.html#multiple-linear-regression"><i class="fa fa-check"></i><b>2.2</b> Multiple Linear Regression</a></li>
+<li class="chapter" data-level="2.3" data-path="estimation.html"><a href="estimation.html#error-analysis"><i class="fa fa-check"></i><b>2.3</b> Error Analysis</a></li>
+<li class="chapter" data-level="2.4" data-path="estimation.html"><a href="estimation.html#the-gauss-markov-theorem"><i class="fa fa-check"></i><b>2.4</b> The Gauss-Markov Theorem</a></li>
+<li class="chapter" data-level="2.5" data-path="estimation.html"><a href="estimation.html#introducing-predictors"><i class="fa fa-check"></i><b>2.5</b> Introducing Predictors</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="estimation.html"><a href="estimation.html#general-theory"><i class="fa fa-check"></i><b>2.5.1</b> General Theory</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="estimation.html"><a href="estimation.html#est-exmp"><i class="fa fa-check"></i><b>2.6</b> R Example</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="inference.html"><a href="inference.html"><i class="fa fa-check"></i><b>3</b> Inference</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="inference.html"><a href="inference.html#hypothesis-tests"><i class="fa fa-check"></i><b>3.1</b> Hypothesis Tests</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="inference.html"><a href="inference.html#t-statistic-and-f-statistic"><i class="fa fa-check"></i><b>3.1.1</b> T-statistic and F-statistic</a></li>
+<li class="chapter" data-level="3.1.2" data-path="inference.html"><a href="inference.html#test-whether-a-coefficient-beta_i-is-significant"><i class="fa fa-check"></i><b>3.1.2</b> Test whether a coefficient <span class="math inline">\(\beta_i\)</span> is significant</a></li>
+<li class="chapter" data-level="3.1.3" data-path="inference.html"><a href="inference.html#test-whether-a-pairsubset-can-be-excluded-from-the-model"><i class="fa fa-check"></i><b>3.1.3</b> Test whether a pair/subset can be excluded from the model</a></li>
+<li class="chapter" data-level="3.1.4" data-path="inference.html"><a href="inference.html#test-whether-the-pair-of-predictors-has-the-same-effect"><i class="fa fa-check"></i><b>3.1.4</b> Test whether the pair of predictors has the same effect</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="inference.html"><a href="inference.html#confidence-interval-ci"><i class="fa fa-check"></i><b>3.2</b> Confidence Interval (CI)</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>4</b> Prediction</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="prediction.html"><a href="prediction.html#prediction-interval"><i class="fa fa-check"></i><b>4.1</b> Prediction Interval</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="prediction.html"><a href="prediction.html#future-observation"><i class="fa fa-check"></i><b>4.1.1</b> Future observation</a></li>
+<li class="chapter" data-level="4.1.2" data-path="prediction.html"><a href="prediction.html#future-mean-response"><i class="fa fa-check"></i><b>4.1.2</b> Future mean response</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="prediction.html"><a href="prediction.html#r-example"><i class="fa fa-check"></i><b>4.2</b> R Example</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="diagnostics.html"><a href="diagnostics.html"><i class="fa fa-check"></i><b>5</b> Diagnostics</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="diagnostics.html"><a href="diagnostics.html#checking-error-assumptions"><i class="fa fa-check"></i><b>5.1</b> Checking Error Assumptions</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="diagnostics.html"><a href="diagnostics.html#constant-noise-variance"><i class="fa fa-check"></i><b>5.1.1</b> Constant Noise Variance</a></li>
+<li class="chapter" data-level="5.1.2" data-path="diagnostics.html"><a href="diagnostics.html#checking-noise-normality"><i class="fa fa-check"></i><b>5.1.2</b> Checking Noise Normality</a></li>
+<li class="chapter" data-level="5.1.3" data-path="diagnostics.html"><a href="diagnostics.html#shapiro-wilk-test-for-normality"><i class="fa fa-check"></i><b>5.1.3</b> Shapiro-Wilk test for normality</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="diagnostics.html"><a href="diagnostics.html#finding-unusual-points"><i class="fa fa-check"></i><b>5.2</b> Finding Unusual Points</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="diagnostics.html"><a href="diagnostics.html#leverage"><i class="fa fa-check"></i><b>5.2.1</b> Leverage</a></li>
+<li class="chapter" data-level="5.2.2" data-path="diagnostics.html"><a href="diagnostics.html#half-normal-plot"><i class="fa fa-check"></i><b>5.2.2</b> Half-normal Plot</a></li>
+<li class="chapter" data-level="5.2.3" data-path="diagnostics.html"><a href="diagnostics.html#studentized-residuals"><i class="fa fa-check"></i><b>5.2.3</b> Studentized Residuals</a></li>
+<li class="chapter" data-level="5.2.4" data-path="diagnostics.html"><a href="diagnostics.html#externally-studentized-residuals"><i class="fa fa-check"></i><b>5.2.4</b> Externally Studentized Residuals</a></li>
+<li class="chapter" data-level="5.2.5" data-path="diagnostics.html"><a href="diagnostics.html#multiple-hypothesis-tests"><i class="fa fa-check"></i><b>5.2.5</b> Multiple Hypothesis Tests</a></li>
+<li class="chapter" data-level="5.2.6" data-path="diagnostics.html"><a href="diagnostics.html#influential-points"><i class="fa fa-check"></i><b>5.2.6</b> Influential Points</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="diagnostics.html"><a href="diagnostics.html#checking-model-structure"><i class="fa fa-check"></i><b>5.3</b> Checking Model Structure</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="diagnostics.html"><a href="diagnostics.html#exploratory-analysis"><i class="fa fa-check"></i><b>5.3.1</b> Exploratory analysis</a></li>
+<li class="chapter" data-level="5.3.2" data-path="diagnostics.html"><a href="diagnostics.html#partial-regression-plot"><i class="fa fa-check"></i><b>5.3.2</b> Partial regression plot</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="problem-with-predictors.html"><a href="problem-with-predictors.html"><i class="fa fa-check"></i><b>6</b> Problem with Predictors</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="problem-with-predictors.html"><a href="problem-with-predictors.html#errors-in-predictors"><i class="fa fa-check"></i><b>6.1</b> Errors in predictors</a></li>
+<li class="chapter" data-level="6.2" data-path="problem-with-predictors.html"><a href="problem-with-predictors.html#change-of-scale"><i class="fa fa-check"></i><b>6.2</b> Change of scale</a></li>
+<li class="chapter" data-level="6.3" data-path="problem-with-predictors.html"><a href="problem-with-predictors.html#standardize-variables"><i class="fa fa-check"></i><b>6.3</b> Standardize Variables</a></li>
+<li class="chapter" data-level="6.4" data-path="problem-with-predictors.html"><a href="problem-with-predictors.html#colinearity"><i class="fa fa-check"></i><b>6.4</b> Colinearity</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="problem-with-error.html"><a href="problem-with-error.html"><i class="fa fa-check"></i><b>7</b> Problem with Error</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="problem-with-error.html"><a href="problem-with-error.html#section"><i class="fa fa-check"></i><b>7.1</b> </a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Regression Analysis Notes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">Regression Analysis Notes</h1>
+<p class="author"><em>Ziyuan Huang</em></p>
+<p class="date"><em>2025-10-22</em></p>
+</div>
+<div id="prerequisites" class="section level1 hasAnchor" number="1">
+<h1><span class="header-section-number">Chapter 1</span> Prerequisites<a href="index.html#prerequisites" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="regression-model" class="section level2 hasAnchor" number="1.1">
+<h2><span class="header-section-number">1.1</span> Regression Model<a href="index.html#regression-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Given <em>response</em> <span class="math inline">\(Y\in\mathbb{R}\)</span> and <em>predictors</em> <span class="math inline">\(\underline{X}=(X_1,\dots,X_p)\in\mathbb{R}^p\)</span>, the goal is to model the relationship between <span class="math inline">\(Y\)</span> and <span class="math inline">\(\underline{X}\)</span> (called to <em>regress <span class="math inline">\(Y\)</span> onto <span class="math inline">\(\underline{X}\)</span></em>) by
+<span class="math display">\[
+  Y=f(\underline{X})+\varepsilon
+\]</span>
+where <span class="math inline">\(f(\cdot)\)</span> is unknown and <span class="math inline">\(\varepsilon\)</span> is the noise.</p>
+<p>The <strong>input</strong> is a dataset of size <span class="math inline">\(n\)</span>: <span class="math inline">\(\left\{(x_{ij})_{j\in[p]},y_i\right\}_{i\in[n]}\)</span>.</p>
+<div id="linear-regression-model" class="section level4 unnumbered hasAnchor">
+<h4>Linear Regression Model<a href="index.html#linear-regression-model" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Assume <span class="math inline">\(f(X) = \beta_0+\beta_1X_1+\dots+\beta_pX_p\)</span>.</p>
+<ul>
+<li>Reduce estimation of functions to estimation of parameters.</li>
+<li>A linear model is linear in <em>parameters</em> not linear in predictors!
+<ul>
+<li>Predictors can be transformed features such as <span class="math inline">\(\ln(X_1)\)</span> or <span class="math inline">\(X_1X_2\)</span></li>
+<li>Generalized linear model:
+<span class="math display">\[g(\mathbb{E}[Y|X])=\beta_0+\sum_{i\in[p]}\beta_iX_i\]</span>
+for some <em>known</em> function <span class="math inline">\(g\)</span>.</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="continuous-random-variables" class="section level2 hasAnchor" number="1.2">
+<h2><span class="header-section-number">1.2</span> Continuous Random Variables<a href="index.html#continuous-random-variables" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="definition">
+<p><span id="def:unlabeled-div-1" class="definition"><strong>Definition 1.1  (t-distribution) </strong></span>The <em><span class="math inline">\(t\)</span>-distribution</em> with <em>degrees of freedom</em> <span class="math inline">\(n\)</span> is determined by the following pdf
+<span class="math display">\[
+    t_n \sim f(x) = \frac{\Gamma(\frac{n+1}{2})}{\sqrt{n\pi}\cdot\Gamma(\frac{n}{2})}\left(1+\frac{x^2}{n}\right)^{-\frac{n+1}{2}}
+  \]</span>
+where <span class="math inline">\(\Gamma(z) = \int_0^\infty t^{z-1} e^{-t}dt\)</span>.</p>
+</div>
+<ul>
+<li><span class="math inline">\(t\)</span>-distribution is symmetric around zero, bell-shaped, but has heavier tails than normal</li>
+<li><span class="math inline">\(t_n\to \mathcal{N}(0,1)\)</span> as <span class="math inline">\(n\to\infty\)</span></li>
+</ul>
+<hr />
+<div class="definition">
+<p><span id="def:unlabeled-div-2" class="definition"><strong>Definition 1.2  (Beta distribution) </strong></span><em>Beta distribution</em> with parameters <span class="math inline">\(a&gt;0\)</span> and <span class="math inline">\(b&gt;0\)</span> has pdf
+<span class="math display">\[
+    \textrm{Beta}(a, b)\sim f(x)=\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}x^{a-1}(1-x)^{b-1},\quad 0&lt;x&lt;1 .
+  \]</span>
+The inverse coefficient is also called the beta-function <span class="math inline">\(B(a,b)=\frac{\Gamma(a)\Gamma(b)}{\Gamma(a+b)}\)</span></p>
+</div>
+<ul>
+<li>Beta distribution is a generalization of uniform distribution to distributions over <span class="math inline">\([0,1]\)</span></li>
+<li><span class="math inline">\(\textrm{Beta}(1,1)=\textrm{Unif}(0,1)\)</span></li>
+<li><em>U-shaped</em> when <span class="math inline">\(a&lt;1\)</span> and <span class="math inline">\(b&lt;1\)</span>; and is <em>bell-shaped</em> when <span class="math inline">\(a&gt;1\)</span> and <span class="math inline">\(b&gt;1\)</span></li>
+<li>Skewed towards 0 when <span class="math inline">\(a&lt;b\)</span>; and is skewed towards 1 when <span class="math inline">\(a&gt;b\)</span>.</li>
+</ul>
+<div class="theorem">
+<p><span id="thm:unlabeled-div-3" class="theorem"><strong>Theorem 1.1  (Beta Conjugate) </strong></span>Beta distribution is the conjugate distribution for binomial distribution.</p>
+<ul>
+<li>If prior is <span class="math inline">\(p\sim\textrm{Unif}(0,1)\)</span>, let <span class="math inline">\(X\sim\textrm{Bin}(n,p)\)</span>, then
+<span class="math display">\[
+  \mathbb{P}(X=k) = \int\begin{pmatrix}n \\ k\end{pmatrix}x^k(1-x)^{n-k}dx = \frac{1}{n+1}
+\]</span>
+meaning the expected number of successes are uniformly distributed.</li>
+<li>Let <span class="math inline">\(p\sim\textrm{Beta}(a,b)\)</span> be the prior and the number of successes be <span class="math inline">\(k\)</span>. Then, the posterior is <span class="math inline">\(\textrm{Beta}(a+k,b+n-k)\)</span>. Thus, <span class="math inline">\(a-1\)</span> represents the number of prior successes and <span class="math inline">\(b-1\)</span> represents the number of prior failures.</li>
+</ul>
+</div>
+<div class="theorem">
+<p><span id="thm:unlabeled-div-4" class="theorem"><strong>Theorem 1.2  (Beta Order Statistic) </strong></span>Let <span class="math inline">\(X\)</span> be the distribution of the <span class="math inline">\(k\)</span>-th smallest element of <span class="math inline">\(n\)</span> uniform and independent tosses Then, <span class="math inline">\(X\sim\textrm{Beta}(k,n-k)\)</span>.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-5" class="proof"><em>Proof</em>. </span>Observe <span class="math inline">\(\mathbb{P}(X\leq t) = \mathbb{P}(\textrm{at least k tosses land in [0,t]})=\sum_{i\geq k}\begin{pmatrix}n\\i\end{pmatrix}t^i(1-t)^{n-i}\)</span>. Thus,
+<span class="math display">\[
+    \begin{aligned}
+    f_{X}(t) &amp;= \sum_{i\geq k}\begin{pmatrix}n\\i\end{pmatrix}\left(it^{i-1}(1-t)^{n-i} - (n-i)t^i(1-t)^{n-i-1}\right) \\
+    &amp;= \begin{pmatrix}n \\ k\end{pmatrix}kt^{k-1}(1-t)^{n-k} + \sum_{i=k}^{n-1}\left[-(n-i)\begin{pmatrix}n \\ i\end{pmatrix}+(i+1)\begin{pmatrix}n \\ i+1\end{pmatrix}\right] t^i(1-t)^{n-i-1} \\
+    &amp; = \frac{n!}{(k-1)!(n-k)!}t^{k-1}(1-t)^{n-k} \sim \textrm{Beta}(k, n-k+1)
+    \end{aligned}
+  \]</span>
+Notice that for integer <span class="math inline">\(n\)</span>, <span class="math inline">\(\Gamma(n)=(n-1)!\)</span>.</p>
+</div>
+<hr />
+<div class="definition">
+<p><span id="def:unlabeled-div-6" class="definition"><strong>Definition 1.3  (Gamma distribution) </strong></span><em>Gamma distribution</em> with <em>shape</em> parameter <span class="math inline">\(\alpha\)</span> and <em>scale</em> parameter <span class="math inline">\(\theta\)</span> has pdf
+<span class="math display">\[
+    \textrm{Gamma}(\alpha,\theta) \sim f(x;\alpha,\theta) = \frac{1}{\Gamma(\alpha)\theta^\alpha}x^{\alpha - 1} e^{-\frac{x}{\theta}},\quad 0\leq x&lt;\infty.
+  \]</span></p>
+</div>
+<div class="lemma">
+<p><span id="lem:unlabeled-div-7" class="lemma"><strong>Lemma 1.1  (Infinite divisibility) </strong></span>Let <span class="math inline">\(X_i\sim\textrm{Gamma}(\alpha_i,\theta)\)</span> for <span class="math inline">\(i\in[n]\)</span> be <em>independent</em>, then
+<span class="math display">\[
+    \sum_{i=1}^nX_i \sim \textrm{Gamma}\left(\sum_{i\in[n]}\alpha_i,\theta\right).
+  \]</span>
+This implies that Gamma distribution is additive in the shape parameter and that it can be decomposed as the sum of arbitrary independent random variables — a property called <strong>infinite divisibility</strong>.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-8" class="proof"><em>Proof</em>. </span>It is sufficient to show the additivity property for <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span>.
+<span class="math display">\[
+  \begin{aligned}
+    f_{X_1+X_2}(t) &amp;= \int_{0}^\infty f_{X_1}(x)f_{X_2}(t-x)dx \\
+    &amp;= \int_{0}^t\frac{x^{\alpha_1-1}e^{-x/\theta}}{\Gamma(\alpha_1)\theta^{\alpha_1}}\frac{(t-x)^{\alpha_2-1}e^{-(t-x)/\theta}}{\Gamma(\alpha_1)\theta^{\alpha_2}}dx \\
+    &amp;=e^{-t/\theta}\int_0^t \frac{x^{\alpha_1-1}(t-x)^{\alpha_2-1}}{\Gamma(\alpha_1)\Gamma(\alpha_2)\theta^{\alpha_1+\alpha_2}}dx \\
+    &amp;\overset{x:=tz}{=}\frac{t^{\alpha_1+\alpha_2-1}e^{-t/\theta}}{\Gamma(\alpha_1+\alpha_2)\theta^{\alpha_1+\alpha_2}}\int_0^1\frac{\Gamma(\alpha_1+\alpha_2)}{\Gamma(\alpha_1)\Gamma(\alpha_2)}z^{\alpha_1-1}(1-z)^{\alpha_2-1}dz \\
+    &amp;=\frac{t^{\alpha_1+\alpha_2-1}e^{-t/\theta}}{\Gamma(\alpha_1+\alpha_2)\theta^{\alpha_1+\alpha_2}} \sim \textrm{Gamma}(\alpha_1+\alpha_2,\theta)
+  \end{aligned}
+\]</span>
+where the last equality used the fact that <span class="math inline">\(\textrm{Beta}(\alpha_1,\alpha_2)\sim \frac{\Gamma(\alpha_1+\alpha_2)}{\Gamma(\alpha_1)\Gamma(\alpha_2)}z^{\alpha_1-1}(1-z)^{\alpha_2-1}\)</span>.</p>
+</div>
+<p><em>Remarks</em></p>
+<ul>
+<li><span class="math inline">\(\textrm{Gamma}(1,\theta)=\textrm{Exp}(1/\theta)\)</span> and <span class="math inline">\(\textrm{Gamma}(n,\theta)=\sum_{i=1}^n\textrm{Exp}(1/\theta)\)</span>: <span class="math inline">\(\textrm{Gamma}(n,\theta)\)</span> models the waiting time for <em>the next <span class="math inline">\(n\)</span></em> independent events to occur, compared to the exponential distribution that only models the very <em>next</em> event.</li>
+<li>Scaling property: <span class="math inline">\(X\sim\textrm{Gamma}(\alpha,\theta)\implies cX\sim\textrm{Gamma}(\alpha,c\theta)\)</span></li>
+</ul>
+<div class="theorem">
+<p><span id="thm:unlabeled-div-9" class="theorem"><strong>Theorem 1.3  (Beta and Gamma) </strong></span>Let <span class="math inline">\(X\sim\textrm{Gamma}(\alpha,\theta)\)</span> and <span class="math inline">\(Y\sim\textrm{Gamma}(\beta,\theta)\)</span> be independent. Then, <span class="math inline">\(\frac{X}{X+Y}\sim\textrm{Beta}(\alpha,\beta)\)</span> and <span class="math inline">\(\frac{X}{X+Y}\)</span> is independent of <span class="math inline">\(X+Y\)</span>.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-10" class="proof"><em>Proof</em>. </span>We apply the transformation rule: <span class="math inline">\(f_Y(y)=f_X(x)\left|\frac{dx}{dy}\right|\)</span>. In this case, <span class="math inline">\(x=(X,Y)\)</span> and <span class="math inline">\(y=(\frac{X}{X+Y}, X+Y)\)</span>. The mapping <span class="math inline">\(y\mapsto x\)</span> is <span class="math inline">\(x_1=y_1y_2\)</span> and <span class="math inline">\(x_2=(1-y_1)y_2\)</span>.
+<span class="math display">\[
+  \left|\frac{dx}{dy}\right| = \left|\begin{pmatrix}
+    y_2 &amp; y_1 \\ -y_2 &amp; 1-y_1
+  \end{pmatrix}\right| =
+  \left|\begin{pmatrix}
+    X+Y &amp; \frac{X}{X+Y} \\ -X-Y &amp; \frac{Y}{X+Y}
+  \end{pmatrix}\right| = Y + X.
+\]</span>
+Thus, the joint distribution of <span class="math inline">\((\frac{X}{X+Y}, X+Y)\)</span> equals
+<span class="math display">\[
+  \begin{aligned}
+    f_{\frac{X}{X+Y}, X+Y}(w,t) &amp;= f_X(wt)f_Y((1-w)t)t \\
+    &amp;\propto t(wt)^{\alpha-1}e^{-wt/\theta}((1-w)t)^{\beta-1}e^{-(1-w)t/\theta} \\
+    &amp;= \underbrace{w^{\alpha-1}(1-w)^{\beta-1}}_{\sim\textrm{Beta}(\alpha,\beta)}\cdot \underbrace{t^{\alpha+\beta-1}e^{-t/\theta}}_{\sim\textrm{Gamma}(\alpha+\beta,\theta)}
+  \end{aligned}
+\]</span>
+The separability of the two pdfs shows the independence.</p>
+</div>
+<hr />
+<div class="definition">
+<p><span id="def:unlabeled-div-11" class="definition"><strong>Definition 1.4  (Chi-squared distribution) </strong></span>A <em>chi-square distribution</em> with <em>degrees of freedom <span class="math inline">\(n\)</span></em> is the distribution of a sum of <span class="math inline">\(n\)</span> independent standard normal random variables, denoted as <span class="math inline">\(\chi_n^2\)</span>.</p>
+</div>
+<ul>
+<li><span class="math inline">\(\chi_n^2\)</span> distribution is a special case of the gamma distribution <span class="math inline">\(\chi_n^2=\textrm{Gamma}\left(\frac{n}{2},2\right)\)</span></li>
+</ul>
+<div class="theorem">
+<p><span id="thm:unlabeled-div-12" class="theorem"><strong>Theorem 1.4  (Normal over Chi is t-distribution) </strong></span>Let <span class="math inline">\(Z\sim\mathcal{N}(0,1)\)</span> and <span class="math inline">\(W\sim\chi_n^2\)</span>. Then, <span class="math inline">\(\frac{Z}{\sqrt{W/n}}\sim t_n\)</span>.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-13" class="proof"><em>Proof</em>. </span>We first calculate the distribution of <span class="math inline">\(\sqrt{W/n}\)</span>, using the scaling property of the gamma distribution:
+<span class="math display">\[
+    \begin{aligned}
+      \mathbb{P}(\sqrt{W/n}\leq t) &amp;= \mathbb{P}(W/n\leq t^2) = \mathbb{P}\left(\textrm{Gamma}\left(\frac{n}{2},\frac{2}{n}\right)\leq t^2\right)
+    \end{aligned}
+  \]</span>
+Using the chain rule, we have
+<span class="math display">\[
+  f_{\sqrt{W/n}}(x) = 2t\left(\frac{n}{2}\right)^{\frac{n}{2}}\cdot\frac{x^{n-2}e^{-\frac{nx^2}{2}}}{\Gamma(\frac{n}{2})} = \frac{n^{n/2}}{2^{n/2-1}}\frac{x^{n-1}e^{-\frac{nx^2}{2}}}{\Gamma(\frac{n}{2})}
+\]</span>
+Define <span class="math inline">\(T:=Z/\sqrt{W/n}\)</span>. Then, use the <a href="https://en.wikipedia.org/wiki/Ratio_distribution">ratio distribution formula</a> for independent random variables:
+<span class="math display">\[
+  \begin{aligned}
+    f_T(t) &amp;= \int_{-\infty}^\infty|x|f_Z(tx)f_{\sqrt{W/n}}(x)dx = \frac{1}{\sqrt{2\pi}}\frac{n^{n/2}}{2^{n/2-1}\Gamma(\frac{n}{2})}\int_{0}^\infty|x| x^{n-1}\exp\left(-\frac{t^2x^2}{2}-\frac{n}{2}x^2\right)dx \\
+    &amp;=\frac{1}{\sqrt{2\pi}}\frac{n^{n/2}}{2^{n/2-1}\Gamma(\frac{n}{2})}\int_{0}^\infty x^{n}\exp\left(-\frac{t^2+n}{2}x^2\right)dx \\
+    &amp;\overset{z:=x^2}{=}\frac{1}{\sqrt{2\pi}}\frac{n^{n/2}}{2^{n/2-1}\Gamma(\frac{n}{2})}\frac{1}{2}\int_{0}^\infty z^{\frac{n-1}{2}}\exp\left(-\frac{t^2+n}{2}z\right)dz \\
+    &amp;=\frac{1}{\sqrt{2\pi}}\frac{n^{n/2}}{2^{n/2}\Gamma(\frac{n}{2})}\Gamma\left(\frac{n+1}{2}\right)\left(\frac{t^2+n}{2}\right)^{-\frac{n+1}{2}}\int_{0}^\infty f_{\textrm{Gamma}\left(\frac{n+1}{2},\frac{2}{t^2+n}\right)}(z)dz \\
+    &amp;= \frac{\Gamma(\frac{n+1}{2})}{\sqrt{\pi n}\Gamma(\frac{n}{2})}(1+t^2/n)^{-\frac{n+1}{2}}
+  \end{aligned}
+\]</span>
+This is exactly the pdf of <span class="math inline">\(t_n\)</span>.</p>
+</div>
+<hr />
+<div class="definition">
+<p><span id="def:unlabeled-div-14" class="definition"><strong>Definition 1.5  (F-distribution) </strong></span>Let <span class="math inline">\(U\sim\chi_m^2\)</span>, <span class="math inline">\(v\sim\chi_n^2\)</span>, and <span class="math inline">\(U,V\)</span> be independent. Then, <span class="math inline">\(\frac{U/m}{V/n}\sim F_{m,n}\)</span>, an <span class="math inline">\(F\)</span>-distribution with <span class="math inline">\(m\)</span> and <span class="math inline">\(n\)</span> degrees of freedom.</p>
+</div>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+<a href="estimation.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": "https://github.com/rstudio/bookdown-demo/edit/master/index.Rmd",
+    "text": "Edit"
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

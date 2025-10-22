@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 Estimation | Regression Analysis Notes</title>
+  <meta name="description" content="A study notes for regression analysis." />
+  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 2 Estimation | Regression Analysis Notes" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="A study notes for regression analysis." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 Estimation | Regression Analysis Notes" />
+  
+  <meta name="twitter:description" content="A study notes for regression analysis." />
+  
+
+<meta name="author" content="Ziyuan Huang" />
+
+
+<meta name="date" content="2025-10-22" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="inference.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#regression-model"><i class="fa fa-check"></i><b>1.1</b> Regression Model</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#continuous-random-variables"><i class="fa fa-check"></i><b>1.2</b> Continuous Random Variables</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>2</b> Estimation</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="estimation.html"><a href="estimation.html#simple-linear-regression"><i class="fa fa-check"></i><b>2.1</b> Simple Linear Regression</a></li>
+<li class="chapter" data-level="2.2" data-path="estimation.html"><a href="estimation.html#multiple-linear-regression"><i class="fa fa-check"></i><b>2.2</b> Multiple Linear Regression</a></li>
+<li class="chapter" data-level="2.3" data-path="estimation.html"><a href="estimation.html#error-analysis"><i class="fa fa-check"></i><b>2.3</b> Error Analysis</a></li>
+<li class="chapter" data-level="2.4" data-path="estimation.html"><a href="estimation.html#the-gauss-markov-theorem"><i class="fa fa-check"></i><b>2.4</b> The Gauss-Markov Theorem</a></li>
+<li class="chapter" data-level="2.5" data-path="estimation.html"><a href="estimation.html#introducing-predictors"><i class="fa fa-check"></i><b>2.5</b> Introducing Predictors</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="estimation.html"><a href="estimation.html#general-theory"><i class="fa fa-check"></i><b>2.5.1</b> General Theory</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="estimation.html"><a href="estimation.html#est-exmp"><i class="fa fa-check"></i><b>2.6</b> R Example</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="inference.html"><a href="inference.html"><i class="fa fa-check"></i><b>3</b> Inference</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="inference.html"><a href="inference.html#hypothesis-tests"><i class="fa fa-check"></i><b>3.1</b> Hypothesis Tests</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="inference.html"><a href="inference.html#t-statistic-and-f-statistic"><i class="fa fa-check"></i><b>3.1.1</b> T-statistic and F-statistic</a></li>
+<li class="chapter" data-level="3.1.2" data-path="inference.html"><a href="inference.html#test-whether-a-coefficient-beta_i-is-significant"><i class="fa fa-check"></i><b>3.1.2</b> Test whether a coefficient <span class="math inline">\(\beta_i\)</span> is significant</a></li>
+<li class="chapter" data-level="3.1.3" data-path="inference.html"><a href="inference.html#test-whether-a-pairsubset-can-be-excluded-from-the-model"><i class="fa fa-check"></i><b>3.1.3</b> Test whether a pair/subset can be excluded from the model</a></li>
+<li class="chapter" data-level="3.1.4" data-path="inference.html"><a href="inference.html#test-whether-the-pair-of-predictors-has-the-same-effect"><i class="fa fa-check"></i><b>3.1.4</b> Test whether the pair of predictors has the same effect</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="inference.html"><a href="inference.html#confidence-interval-ci"><i class="fa fa-check"></i><b>3.2</b> Confidence Interval (CI)</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>4</b> Prediction</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="prediction.html"><a href="prediction.html#prediction-interval"><i class="fa fa-check"></i><b>4.1</b> Prediction Interval</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="prediction.html"><a href="prediction.html#future-observation"><i class="fa fa-check"></i><b>4.1.1</b> Future observation</a></li>
+<li class="chapter" data-level="4.1.2" data-path="prediction.html"><a href="prediction.html#future-mean-response"><i class="fa fa-check"></i><b>4.1.2</b> Future mean response</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="prediction.html"><a href="prediction.html#r-example"><i class="fa fa-check"></i><b>4.2</b> R Example</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="diagnostics.html"><a href="diagnostics.html"><i class="fa fa-check"></i><b>5</b> Diagnostics</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="diagnostics.html"><a href="diagnostics.html#checking-error-assumptions"><i class="fa fa-check"></i><b>5.1</b> Checking Error Assumptions</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="diagnostics.html"><a href="diagnostics.html#constant-noise-variance"><i class="fa fa-check"></i><b>5.1.1</b> Constant Noise Variance</a></li>
+<li class="chapter" data-level="5.1.2" data-path="diagnostics.html"><a href="diagnostics.html#checking-noise-normality"><i class="fa fa-check"></i><b>5.1.2</b> Checking Noise Normality</a></li>
+<li class="chapter" data-level="5.1.3" data-path="diagnostics.html"><a href="diagnostics.html#shapiro-wilk-test-for-normality"><i class="fa fa-check"></i><b>5.1.3</b> Shapiro-Wilk test for normality</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="diagnostics.html"><a href="diagnostics.html#finding-unusual-points"><i class="fa fa-check"></i><b>5.2</b> Finding Unusual Points</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="diagnostics.html"><a href="diagnostics.html#leverage"><i class="fa fa-check"></i><b>5.2.1</b> Leverage</a></li>
+<li class="chapter" data-level="5.2.2" data-path="diagnostics.html"><a href="diagnostics.html#half-normal-plot"><i class="fa fa-check"></i><b>5.2.2</b> Half-normal Plot</a></li>
+<li class="chapter" data-level="5.2.3" data-path="diagnostics.html"><a href="diagnostics.html#studentized-residuals"><i class="fa fa-check"></i><b>5.2.3</b> Studentized Residuals</a></li>
+<li class="chapter" data-level="5.2.4" data-path="diagnostics.html"><a href="diagnostics.html#externally-studentized-residuals"><i class="fa fa-check"></i><b>5.2.4</b> Externally Studentized Residuals</a></li>
+<li class="chapter" data-level="5.2.5" data-path="diagnostics.html"><a href="diagnostics.html#multiple-hypothesis-tests"><i class="fa fa-check"></i><b>5.2.5</b> Multiple Hypothesis Tests</a></li>
+<li class="chapter" data-level="5.2.6" data-path="diagnostics.html"><a href="diagnostics.html#influential-points"><i class="fa fa-check"></i><b>5.2.6</b> Influential Points</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="diagnostics.html"><a href="diagnostics.html#checking-model-structure"><i class="fa fa-check"></i><b>5.3</b> Checking Model Structure</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="diagnostics.html"><a href="diagnostics.html#exploratory-analysis"><i class="fa fa-check"></i><b>5.3.1</b> Exploratory analysis</a></li>
+<li class="chapter" data-level="5.3.2" data-path="diagnostics.html"><a href="diagnostics.html#partial-regression-plot"><i class="fa fa-check"></i><b>5.3.2</b> Partial regression plot</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="problem-with-predictors.html"><a href="problem-with-predictors.html"><i class="fa fa-check"></i><b>6</b> Problem with Predictors</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="problem-with-predictors.html"><a href="problem-with-predictors.html#errors-in-predictors"><i class="fa fa-check"></i><b>6.1</b> Errors in predictors</a></li>
+<li class="chapter" data-level="6.2" data-path="problem-with-predictors.html"><a href="problem-with-predictors.html#change-of-scale"><i class="fa fa-check"></i><b>6.2</b> Change of scale</a></li>
+<li class="chapter" data-level="6.3" data-path="problem-with-predictors.html"><a href="problem-with-predictors.html#standardize-variables"><i class="fa fa-check"></i><b>6.3</b> Standardize Variables</a></li>
+<li class="chapter" data-level="6.4" data-path="problem-with-predictors.html"><a href="problem-with-predictors.html#colinearity"><i class="fa fa-check"></i><b>6.4</b> Colinearity</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="problem-with-error.html"><a href="problem-with-error.html"><i class="fa fa-check"></i><b>7</b> Problem with Error</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="problem-with-error.html"><a href="problem-with-error.html#section"><i class="fa fa-check"></i><b>7.1</b> </a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Regression Analysis Notes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="estimation" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">Chapter 2</span> Estimation<a href="estimation.html#estimation" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Estimator is a statistic (a function of the observed finite samples/dataset) that is used to estimate an unknown population parameter.
+<strong>Criterion</strong>: <em>Least Squares</em> (LS) or <em>Sum of Squared Errors</em> (SSE)
+<span class="math display">\[
+\min_{\boldsymbol{\beta}\in\mathbb{R}^{p+1}}\;\sum_{i\in[n]}\varepsilon_i^2=\sum_{i\in[n]}\left(y_i-\beta_0-\sum_{j\in[p]}x_{ij}\beta_j\right)^2.
+\]</span></p>
+<div id="simple-linear-regression" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> Simple Linear Regression<a href="estimation.html#simple-linear-regression" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This is the special case when <span class="math inline">\(p=1\)</span> (i.e., one predictor). The optimization problem is convex and can be solved with the first order condition:
+<span class="math display">\[
+\hat{\beta}_1=\frac{\sum_{i\in[n]}(x_{i}-\bar{x})(y_i-\bar{y})}{\sum_{i\in[n]}(x_i-\bar{x})^2}=\frac{s^2_{xy}}{s_x^2}=r_{xy}\times\frac{s_y}{s_x}
+\]</span>
+where <span class="math inline">\(s^2_{xy}\)</span>, <span class="math inline">\(s^2_x\)</span>, <span class="math inline">\(s_y^2\)</span>, and <span class="math inline">\(r_{xy}\)</span> are sample covariance of <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, sample variance of <span class="math inline">\(X\)</span>, sample variance of <span class="math inline">\(Y\)</span>, and sample correlation of <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, respectively; and
+<span class="math display">\[
+\hat{\beta}_0=\bar{y}-\hat{\beta}_1\bar{x}.
+\]</span>
+Plugin the above solution into the regression line <span class="math inline">\(y=\hat{\beta}_1x+\hat{\beta}_0\)</span>, we obtain the concise expression
+<span class="math display">\[
+\frac{y-\bar{y}}{s_y}=r\frac{x-\bar{x}}{s_x}
+\]</span></p>
+<p><em>Remarks</em></p>
+<ul>
+<li>Let x and y be standardized by sample mean and standard deviation. Then, the regression lines are <span class="math inline">\(y=rx\)</span> and <span class="math inline">\(x=ry\)</span>. Notice that the lines are different unless <span class="math inline">\(r=\pm 1\)</span>, representing perfect correlation.</li>
+</ul>
+</div>
+<div id="multiple-linear-regression" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Multiple Linear Regression<a href="estimation.html#multiple-linear-regression" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This is the general case with <span class="math inline">\(p\geq 1\)</span>. Denote <span class="math inline">\(\boldsymbol{x}_i=(1, x_{i1},\dots,x_{ip})^\top\in\mathbb{R}^{p+1}\)</span> and the data matrix <span class="math inline">\(X:=(\boldsymbol{x}_1,\dots,\boldsymbol{x}_n)^\top\in\mathbb{R}^{(p+1)\times n}\)</span>. The estimator is given by the MSE solution
+<span class="math display">\[
+\hat{\boldsymbol{\beta}} = (X^\top X)^{-1}X^\top\boldsymbol{y}
+\]</span>
+<em>Remarks</em></p>
+<ul>
+<li><span class="math inline">\(H:=X(X^\top X)^{-1}X\)</span> is the <em>projection matrix</em> onto <span class="math inline">\(\textrm{Col}(X)\)</span>. In other words, linear regression is equivalent to projecting the response vector on to <span class="math inline">\(\textrm{Col}(X)\)</span> and <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span> is the projection coefficient.
+<ul>
+<li><span class="math inline">\(H\)</span> is also called the <em>hat matrix</em> as it converts the response vector <span class="math inline">\(\boldsymbol{y}\)</span> to the “hatted” (i.e., predicted) response vector <span class="math inline">\(\hat{\boldsymbol{y}}\)</span></li>
+<li><span class="math inline">\(R:=I-H\)</span> is the <em>residual matrix</em> as it produces the residual vector <span class="math inline">\(\hat{\boldsymbol{e}}:=\boldsymbol{y}-\hat{\boldsymbol{y}}\)</span></li>
+</ul></li>
+<li><span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span> is <em>unbiased</em>: <span class="math inline">\(\mathbb{E}[\hat{\boldsymbol{\beta}}] = (X^\top X)^{-1}X^\top(X\vec{\beta}+\varepsilon)=\boldsymbol{\beta}\)</span></li>
+<li>When noise are <em>homoscedasticity</em> with variance <span class="math inline">\(\sigma^2\)</span>, then the variance of the estimator equals
+<span class="math display">\[\textrm{Var}(\hat{\boldsymbol{\beta}})=(X^\top X)^{-1}X^\top\textrm{Var}(\varepsilon)X(X^\top X)^{-1}=\sigma^2(X^\top X)^{-1}\]</span></li>
+<li>An unbiased estimator of the noise variance is
+<span class="math display">\[
+  \hat{\sigma}^2=\frac{\sum_{i\in[n]}(y_i-\hat{y})^2}{n-(p+1)}.
+  \]</span></li>
+</ul>
+</div>
+<div id="error-analysis" class="section level2 hasAnchor" number="2.3">
+<h2><span class="header-section-number">2.3</span> Error Analysis<a href="estimation.html#error-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Error analysis is a study of the residuals <span class="math inline">\(e_i:=y_i-\hat{y}_i\)</span> for all <span class="math inline">\(i\in[n]\)</span>.</p>
+<div class="lemma">
+<p><span id="lem:unlabeled-div-15" class="lemma"><strong>Lemma 2.1  </strong></span><span class="math inline">\(\sum_{i\in[n]}e_i=0\)</span> or equivalently <span class="math inline">\(\frac{1}{n}\sum_{i\in[n]}\hat{y}_i=\bar{y}\)</span>.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-16" class="proof"><em>Proof</em>. </span>By the projection theorem, <span class="math inline">\(\boldsymbol{e}\perp \textrm{Col}(X)\)</span>. Then, notice <span class="math inline">\(\boldsymbol{1}\in\textrm{Col}(X)\)</span>.</p>
+</div>
+<p>Define <em>residual sum of squares</em> (i.e., the LS loss at the optimal estimator) as
+<span class="math display">\[
+  RSS :=\sum_{i\in[n]}e_i^2 = \sum_{i\in[n]}(y_i-\hat{y}_i)^2
+\]</span>
+and the <em>total sum of squares</em>
+<span class="math display">\[
+  TSS := \sum_{i\in[n]}(y_i-\bar{y}_i)^2.
+\]</span></p>
+<p>We measure the goodness-of-fit using the <em>coefficient of determination</em> or <span class="math inline">\(R^2\)</span></p>
+<p><span class="math display">\[
+R^2=1-\frac{RSS}{TSS}
+\]</span>
+<span class="math inline">\(R^2\)</span> measures <em>the proportion of variability of the response variable that can be explained by the predictors.</em></p>
+<p><em>Remarks</em></p>
+<ul>
+<li><p>RSS alone as the error metric has the problem that it <em>does not have reasonable units</em>.</p></li>
+<li><p>Variability of the predictors or <em>regression sum of squares</em>: <span class="math inline">\(\sum_{i\in[n]}(\hat{y}_i-\bar{y})^2=TSS - RSS\)</span></p></li>
+<li><p>For simple linear regression: <span class="math inline">\(R^2 = r^2\)</span></p></li>
+<li><p>Small <span class="math inline">\(R^2\)</span> does not mean <span class="math inline">\(x,y\)</span> are not linearly related; it just means the variance of noise is high compared to the trend (i.e., low snr)</p></li>
+<li><p>Large <span class="math inline">\(R^2\)</span> does not mean the model is correct (e.g., quadratic model with zero noise)</p></li>
+<li><p><span class="math inline">\(R^2\)</span> always increase when adding more <em>predictors</em> to the model because setting <span class="math inline">\(\beta\)</span> for the new predictor to zero recovers the old <span class="math inline">\(RSS\)</span>, which equals to the LS under the optimal estimator.</p>
+<p><em>Adjusted <span class="math inline">\(R^2\)</span></em> is used to mitigate the issue of number of predictors:
+<span class="math display">\[
+  \textrm{Adjusted }R^2 = 1 - \frac{RSS/(n-p-1)}{TSS / (n-1)} = 1-\frac{\hat{\sigma}^2}{s_y^2}
+\]</span></p></li>
+</ul>
+</div>
+<div id="the-gauss-markov-theorem" class="section level2 hasAnchor" number="2.4">
+<h2><span class="header-section-number">2.4</span> The Gauss-Markov Theorem<a href="estimation.html#the-gauss-markov-theorem" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="definition">
+<p><span id="def:unlabeled-div-17" class="definition"><strong>Definition 2.1  </strong></span>A <em>linear estimator</em> of the quantity <span class="math inline">\(\psi\)</span> is a linear combination of the <em>responses</em>: <span class="math inline">\(\hat{\psi}=c_1y_1+\dots+c_ny_n\)</span>.</p>
+</div>
+<p>The linear regression produces the <em>best linear unbiased estimator</em> (BLUE) in the following sense.</p>
+<div class="theorem">
+<p><span id="thm:unlabeled-div-18" class="theorem"><strong>Theorem 2.1  </strong></span>Suppose <span class="math inline">\(\boldsymbol{y}=X\boldsymbol{\beta}+\varepsilon\)</span>, <span class="math inline">\(X\)</span> is full rank, <span class="math inline">\(\mathbb{E}[\varepsilon]=\boldsymbol{0}\)</span>, and <span class="math inline">\(\textrm{Var}(\varepsilon)=\sigma^2I\)</span>. Consider the quantity <span class="math inline">\(\psi=\boldsymbol{c}^\top\boldsymbol{\beta}\)</span>. Then, among all unbiased and linear estimator of <span class="math inline">\(\psi\)</span>, <span class="math inline">\(\hat{\psi}:=\boldsymbol{c}^\top\hat{\boldsymbol{\beta}}\)</span> has the minimum variance and is unique.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-19" class="proof"><em>Proof</em>. </span>Let <span class="math inline">\(\tilde{\psi}=\boldsymbol{b}^\top\boldsymbol{y}\)</span> be an arbitrary unbiased linear estimator of <span class="math inline">\(\psi\)</span>. Then, we have
+<span class="math display">\[
+  \textrm{Var}(\tilde{\psi}) = \boldsymbol{b}^\top\textrm{Var}(\boldsymbol{y})\boldsymbol{b} = \sigma^2\lVert\boldsymbol{b}\rVert^2
+\]</span>
+Since <span class="math inline">\(\tilde{\psi}\)</span> is unbiased, <span class="math inline">\(\mathbb{E}[\tilde{\psi}]=\boldsymbol{b}^\top X\boldsymbol{\beta}=\boldsymbol{c}^\top\boldsymbol{\beta}\)</span> for every <span class="math inline">\(\boldsymbol{\beta}\)</span>. Thus, we must have <span class="math inline">\(\boldsymbol{b}^\top X=\boldsymbol{c}^\top\)</span>. The minimum variance of <span class="math inline">\(\tilde{\psi}\)</span> can be obtained from the following optimization problem
+<span class="math display">\[
+  \min_{\boldsymbol{b}\in\mathbb{R}^n}\;\lVert\boldsymbol{b}\rVert^2\quad \textrm{s.t.}\quad\boldsymbol{b}^\top X=\boldsymbol{c}^\top.
+\]</span>
+The lagrangian of this problem is <span class="math inline">\(L(\boldsymbol{\beta},\boldsymbol{\lambda})=\lVert\boldsymbol{b}\rVert^2+\boldsymbol{\lambda}^\top(X^\top\boldsymbol{b}-\boldsymbol{c})\)</span>. The first order condition implies <span class="math inline">\(\boldsymbol{b}^*=-\frac{1}{2}X \boldsymbol{\lambda}\)</span> and the dual function is
+<span class="math display">\[
+  D(\lambda)=-\frac{1}{4}\boldsymbol{\lambda}^\top(X^\top X)\boldsymbol{\lambda}-\boldsymbol{\lambda}^\top\boldsymbol{c}.
+\]</span>
+It is easy to check that the strong duality holds and the dual maximizer satisfies <span class="math inline">\(\boldsymbol{\lambda}^*=-2(X^\top X)^{-1}\boldsymbol{c}\)</span>. Thus, we must have <span class="math inline">\(\boldsymbol{b}^*=X(X^\top X)^{-1}\boldsymbol{c}\)</span>. So, this minimum variance unbiased linear estimator is
+<span class="math display">\[
+  \hat{\psi} = (\boldsymbol{b}^*)^\top\boldsymbol{y} = \boldsymbol{c}^\top(X^\top X)^{-1}X^\top\boldsymbol{y} = \boldsymbol{c}^\top\hat{\boldsymbol{\beta}}.
+\]</span></p>
+<p>The uniqueness is obvious as the optimization is strongly convex.</p>
+</div>
+<p><em>Remarks</em></p>
+<ul>
+<li>In the linear regression model, <span class="math inline">\(f(X)\)</span> is best estimated by <span class="math inline">\(X\hat{\beta}\)</span> by taking <span class="math inline">\(\boldsymbol{c}=(1,X_1,\dots,X_p)^\top\)</span></li>
+<li>Unbiased cannot be dropped: ridge regression has lower variance than linear regression</li>
+</ul>
+</div>
+<div id="introducing-predictors" class="section level2 hasAnchor" number="2.5">
+<h2><span class="header-section-number">2.5</span> Introducing Predictors<a href="estimation.html#introducing-predictors" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="general-theory" class="section level3 hasAnchor" number="2.5.1">
+<h3><span class="header-section-number">2.5.1</span> General Theory<a href="estimation.html#general-theory" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let <span class="math inline">\(X\in\mathbb{R}^{n\times(p+1)}\)</span> be existing data matrix and <span class="math inline">\(Z\in\mathbb{R}^{n\times q}\)</span> be the data matrix consisting additional predictors. The linear regression model can be written as
+<span class="math display">\[
+  \mathbb{E}[Y|X,Z] = X\boldsymbol{\delta} + Z\boldsymbol{\gamma}
+\]</span>
+Let the optimal (LS-minimal) coefficients be <span class="math inline">\(\hat{\boldsymbol{\delta}}\)</span> and <span class="math inline">\(\hat{\boldsymbol{\gamma}}\)</span>. Our goal is to compare <span class="math inline">\(\hat{\boldsymbol{\delta}}\)</span> with <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span> — the regression coefficients with the old predictors only.</p>
+<div class="theorem">
+<p><span id="thm:unlabeled-div-20" class="theorem"><strong>Theorem 2.2  (Coefficients of Additional Predictors) </strong></span>Assume columns of <span class="math inline">\(X\)</span> and <span class="math inline">\(Z\)</span> are independent so that a unique solution exists. Then,</p>
+<ul>
+<li><span class="math inline">\(\hat{\boldsymbol{\gamma}}=(Z^\top RZ)^{-1}Z^\top R\boldsymbol{y}\)</span> — projection coefficient of the response vector onto the <span class="math inline">\(X\)</span>-residualized column space of <span class="math inline">\(Z\)</span> (i.e., <span class="math inline">\(\mathcal{C}(X)^\perp\cap\mathcal{C}(Z)\)</span>).</li>
+<li><span class="math inline">\(\hat{\boldsymbol{\delta}}=(X^\top X)^{-1}X^\top(\boldsymbol{y}-Z\hat{\boldsymbol{\gamma}})=\hat{\boldsymbol{\beta}}-(X^\top X)^{-1}X^\top Z\hat{\boldsymbol{\gamma}}\)</span> — The coefficients of the new predictors are determined by the <strong>innovations</strong> in the new predictors <strong>independently</strong>, while the coefficients of the existing predictors should bear the linearly dependent component brought by the new predictors.</li>
+</ul>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-21" class="proof"><em>Proof</em>. </span>Rewrite the model as <span class="math inline">\(\mathbb{E}[Y|X,Z] = X\boldsymbol{\delta} + HZ\boldsymbol{\gamma} +  (I-H)Z\boldsymbol{\gamma} = (X+HZ)\tilde{\boldsymbol{\delta}}+(I-H)Z\boldsymbol{\gamma}\)</span>. Then, it follows
+<span class="math display">\[
+  \begin{aligned}
+  \begin{pmatrix} \hat{\tilde{\boldsymbol{\delta}}} \\ \hat{\boldsymbol{\gamma}} \end{pmatrix} &amp;=
+  \left(\begin{pmatrix}
+    (X + HZ)^\top \\ Z^\top(I-H)
+  \end{pmatrix}
+  \begin{pmatrix}
+    X + HZ &amp; (I-H)Z
+  \end{pmatrix}\right)^{-1}
+  \begin{pmatrix}
+    (X + HZ)^\top \\ Z^\top(I-H)
+  \end{pmatrix}\boldsymbol{y} \\
+  &amp;= \begin{pmatrix}
+    (X + HZ)^\top(X+HZ) &amp; 0 \\
+    0 &amp; Z^\top(I-H)Z
+  \end{pmatrix}^{-1}
+  \begin{pmatrix}
+    (X + HZ)^\top \\ Z^\top(I-H)
+  \end{pmatrix}\boldsymbol{y} \\
+  \implies \hat{\boldsymbol{\gamma}} &amp;= (Z^\top R Z)^{-1}Z^\top R\boldsymbol{y}.
+  \end{aligned}
+\]</span>
+The second bullet point is obtained by plugging in <span class="math inline">\(\hat{\boldsymbol{\gamma}}\)</span> in which case the problem becomes regressing <span class="math inline">\(\boldsymbol{y}-Z\hat{\boldsymbol{\gamma}}\)</span> onto <span class="math inline">\(X\)</span>.</p>
+</div>
+<ul>
+<li>Due to symmetry, <span class="math inline">\(\hat{\boldsymbol{\delta}}\)</span> can also be viewed as an independent regression coefficients on the innovations in <span class="math inline">\(X\)</span> against <span class="math inline">\(Z\)</span></li>
+</ul>
+<div class="lemma">
+<p><span id="lem:unlabeled-div-22" class="lemma"><strong>Lemma 2.2  (Subspace relationships) </strong></span>Let <span class="math inline">\(H_X\)</span>, <span class="math inline">\(H_Z\)</span>, and <span class="math inline">\(H_{XZ}\)</span> be the hat matrix when the predictors are <span class="math inline">\(X\)</span>, <span class="math inline">\(Z\)</span>, and both <span class="math inline">\(X\)</span> and <span class="math inline">\(Z\)</span>, respectively. Similarly, we use <span class="math inline">\(R_X\)</span>, <span class="math inline">\(R_Z\)</span>, and <span class="math inline">\(R_{XZ}\)</span> to denote the corresponding orthogonal matrices.</p>
+<ul>
+<li><span class="math inline">\(H_{XZ}\)</span> is the projection onto <span class="math inline">\(\mathcal{C}(X)\oplus \mathcal{C}(Z)\)</span>, while <span class="math inline">\(R_{XZ}\)</span> is the projection onto <span class="math inline">\(\mathcal{C}(X)\cap \mathcal{C}(Z)\)</span></li>
+<li><span class="math inline">\(R_{XZ}=R_XR_Z\)</span> and <span class="math inline">\(H_{XZ} = 1- R_{XZ}\)</span></li>
+</ul>
+</div>
+<div class="theorem">
+<p><span id="thm:est-res" class="theorem"><strong>Theorem 2.3  (Residuals of additional predictors) </strong></span></p>
+<ul>
+<li><span class="math inline">\(R_{XZ}\boldsymbol{y}=R_X(\boldsymbol{y}-Z\hat{\boldsymbol{\gamma}})=R_{Z}(\boldsymbol{y}-X\hat{\boldsymbol{\delta}})\)</span></li>
+<li><span class="math inline">\(\textrm{RSS} = (\boldsymbol{y}-Z\hat{\boldsymbol{\gamma}})^\top R_X(\boldsymbol{y}-Z\hat{\boldsymbol{\gamma}})=\boldsymbol{y}^\top R_X\boldsymbol{y}-\hat{\boldsymbol{\gamma}}^\top Z^\top R_X\boldsymbol{y}\)</span></li>
+</ul>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-23" class="proof"><em>Proof</em>. </span>The second bullet point follows from <span class="math inline">\(R_X\boldsymbol{y}-R_XZ\hat{\boldsymbol{\gamma}}\perp R_X\boldsymbol{y}\)</span> as projecting <span class="math inline">\(\boldsymbol{y}\)</span> onto the <span class="math inline">\(X\)</span>-residualized <span class="math inline">\(Z\)</span> is the same as projecting the <span class="math inline">\(X\)</span>-residualized <span class="math inline">\(\boldsymbol{y}\)</span> onto <span class="math inline">\(X\)</span>-residualized <span class="math inline">\(Z\)</span>.</p>
+</div>
+</div>
+</div>
+<div id="est-exmp" class="section level2 hasAnchor" number="2.6">
+<h2><span class="header-section-number">2.6</span> R Example<a href="estimation.html#est-exmp" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="estimation.html#cb1-1" tabindex="-1"></a><span class="fu">library</span>(faraway)</span>
+<span id="cb1-2"><a href="estimation.html#cb1-2" tabindex="-1"></a><span class="fu">data</span>(gala)</span>
+<span id="cb1-3"><a href="estimation.html#cb1-3" tabindex="-1"></a>temp <span class="ot">=</span> <span class="fu">lm</span>(Species <span class="sc">~</span> Area <span class="sc">+</span> Elevation <span class="sc">+</span> Nearest <span class="sc">+</span> Scruz <span class="sc">+</span> Adjacent, <span class="at">data=</span>gala)</span>
+<span id="cb1-4"><a href="estimation.html#cb1-4" tabindex="-1"></a><span class="fu">summary</span>(temp)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Species ~ Area + Elevation + Nearest + Scruz + Adjacent, 
+##     data = gala)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -111.679  -34.898   -7.862   33.460  182.584 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  7.068221  19.154198   0.369 0.715351    
+## Area        -0.023938   0.022422  -1.068 0.296318    
+## Elevation    0.319465   0.053663   5.953 3.82e-06 ***
+## Nearest      0.009144   1.054136   0.009 0.993151    
+## Scruz       -0.240524   0.215402  -1.117 0.275208    
+## Adjacent    -0.074805   0.017700  -4.226 0.000297 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 60.98 on 24 degrees of freedom
+## Multiple R-squared:  0.7658, Adjusted R-squared:  0.7171 
+## F-statistic:  15.7 on 5 and 24 DF,  p-value: 6.838e-07</code></pre>
+<ul>
+<li><em>Estimate</em>: OLS estimation of <span class="math inline">\(\boldsymbol{\beta}\)</span></li>
+<li><em>Std. Error</em>: estimated standard deviation of <span class="math inline">\(\beta_i\)</span>’s (i.e., <span class="math inline">\(\sqrt{\hat{\sigma}^2(X^\top X)_{ii}^{-1}}\)</span>)</li>
+<li><em>Residual standard error</em>: <span class="math inline">\(\hat{\sigma}\)</span> where <em>degrees of freedom</em> is <span class="math inline">\(n-p-1\)</span></li>
+</ul>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="inference.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": "https://github.com/rstudio/bookdown-demo/edit/master/01-linear.Rmd",
+    "text": "Edit"
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

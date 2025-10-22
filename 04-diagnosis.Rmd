@@ -158,13 +158,9 @@ $$
  t_i=\frac{\hat{\varepsilon}_i}{\hat{\sigma}_{(i)}\sqrt{1-h_i}}=r_i\left(\frac{n-(p+1)-1}{n-(p+1)-r_i^2}\right)^{1/2}
 $$
 :::
-::: {.proof}
-  
-:::
-
 - The first term is a contrast to the (internally) studentized residual
 - The second line offers easier computation method: only need to do one regression with all $n$ points
-- A reasonable of 
+- A reasonable of threshold for influential point is $1$.
 
 ### Multiple Hypothesis Tests
   

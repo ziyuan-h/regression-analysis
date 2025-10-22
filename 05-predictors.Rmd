@@ -1,0 +1,69 @@
+# Problem with Predictors
+
+## Errors in predictors
+
+Consider simple regression with observation and measurement errors.
+\begin{align}
+  &Y^o = Y + \varepsilon \\
+  &X^o = X + \delta \\
+  &Y = \beta_0 + \beta_1 X
+\end{align}
+
+So, the relationshiop of the observations is
+$$
+  Y^o = \beta_0 + \beta_1 X^o + \varepsilon - \beta_1\delta
+$$
+The estimator is biased
+$$
+\mathbb{E}{\hat{\beta}_1} =\beta_1 \frac{\sigma_x^2 + \sigma_{x\delta}}{\sigma_x^2 + \sigma_{\delta}^2 + \sigma_{x\delta}}
+$$
+
+When $X$ and $\delta$ are uncorrelated:
+ - $\hat{\beta}_1$ biased towards zero
+ - negligible when $\sigma_x>>\sigma_\delta$
+ 
+ 
+## Change of scale
+
+$$
+  x_j \mapsto \frac{x_j-a}{b}\;\textrm{ or } \; y\mapsto \frac{y-a}{b}
+$$
+
+Benefit of changing scales:
+
+- predictors with similar magnitude are easier to compare
+- improve numerical stability
+- aid interpretation
+
+
+Consequences:
+
+- Rescaling $x_i$ does not change the projection matrix
+  $$
+    \mathbb{E}[Y|\boldsymbol{x}]= \beta_0 + \dots + \frac{x_j}{b}\cdot (b\beta_j) - \frac{a}{b}(b\beta_j) + \dots
+  $$
+  leaving $t$/$F$ tests, $R^2$, and $\hat{\sigma}^2$ unchanges, but
+$\hat{\beta}_j\mapsto b\hat{\beta}_j$ and $\hat{\beta}_0\mapsto \hat{\beta}_0 + a\hat{\beta}_j$
+
+- Rescaling $y$ makes $\hat{\beta}_i\mapsto\hat{\beta}_i/b$, $\forall i\in[n]$, and $\hat{\beta}_0\mapsto(\hat{\beta}_0-a)/b$
+  $$
+    \mathbb{E}[Y_{\textrm{new}}|\boldsymbol{x}] = \frac{\beta_0-a}{b} + \sum_{i\in[n]}\frac{x_i\beta_i}{b}.
+  $$
+  $\hat{Y}$ and $\bar{Y}$ will be scaled similarly, leaving the $t$/$F$ tests and $R^2$ unchanges but $\hat{\sigma}\mapsto\hat{\sigma}/b$.
+
+
+## Standardize Variables
+
+- Can compare coefficients directly
+- Help numerical stability
+- Harder to interpret
+
+## Colinearity 
+
+Consequence:
+
+- Imprecise estimate of $\beta$ due to large standard error
+- Detection
+    - *Pairwise* correlation: correlation matrix
+    - General (non-pairwise) linearity: regress $x_j$ onto other predictors and look for large $R^2$ (denoted as $R_i^2$) --- $\frac{1}{1-R^2_i}$ is called the *variance inflation factor*
+    - Condition number of $X^\top X$: $\kappa =\sqrt{\lambda_{(1)}/\lambda_{(p+1)}}$

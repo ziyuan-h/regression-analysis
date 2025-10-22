@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 5 Diagnostics | Regression Analysis Notes</title>
+  <meta name="description" content="A study notes for regression analysis." />
+  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 5 Diagnostics | Regression Analysis Notes" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="A study notes for regression analysis." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 5 Diagnostics | Regression Analysis Notes" />
+  
+  <meta name="twitter:description" content="A study notes for regression analysis." />
+  
+
+<meta name="author" content="Ziyuan Huang" />
+
+
+<meta name="date" content="2025-10-22" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="prediction.html"/>
+<link rel="next" href="problem-with-predictors.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#regression-model"><i class="fa fa-check"></i><b>1.1</b> Regression Model</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#continuous-random-variables"><i class="fa fa-check"></i><b>1.2</b> Continuous Random Variables</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>2</b> Estimation</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="estimation.html"><a href="estimation.html#simple-linear-regression"><i class="fa fa-check"></i><b>2.1</b> Simple Linear Regression</a></li>
+<li class="chapter" data-level="2.2" data-path="estimation.html"><a href="estimation.html#multiple-linear-regression"><i class="fa fa-check"></i><b>2.2</b> Multiple Linear Regression</a></li>
+<li class="chapter" data-level="2.3" data-path="estimation.html"><a href="estimation.html#error-analysis"><i class="fa fa-check"></i><b>2.3</b> Error Analysis</a></li>
+<li class="chapter" data-level="2.4" data-path="estimation.html"><a href="estimation.html#the-gauss-markov-theorem"><i class="fa fa-check"></i><b>2.4</b> The Gauss-Markov Theorem</a></li>
+<li class="chapter" data-level="2.5" data-path="estimation.html"><a href="estimation.html#introducing-predictors"><i class="fa fa-check"></i><b>2.5</b> Introducing Predictors</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="estimation.html"><a href="estimation.html#general-theory"><i class="fa fa-check"></i><b>2.5.1</b> General Theory</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="estimation.html"><a href="estimation.html#est-exmp"><i class="fa fa-check"></i><b>2.6</b> R Example</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="inference.html"><a href="inference.html"><i class="fa fa-check"></i><b>3</b> Inference</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="inference.html"><a href="inference.html#hypothesis-tests"><i class="fa fa-check"></i><b>3.1</b> Hypothesis Tests</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="inference.html"><a href="inference.html#t-statistic-and-f-statistic"><i class="fa fa-check"></i><b>3.1.1</b> T-statistic and F-statistic</a></li>
+<li class="chapter" data-level="3.1.2" data-path="inference.html"><a href="inference.html#test-whether-a-coefficient-beta_i-is-significant"><i class="fa fa-check"></i><b>3.1.2</b> Test whether a coefficient <span class="math inline">\(\beta_i\)</span> is significant</a></li>
+<li class="chapter" data-level="3.1.3" data-path="inference.html"><a href="inference.html#test-whether-a-pairsubset-can-be-excluded-from-the-model"><i class="fa fa-check"></i><b>3.1.3</b> Test whether a pair/subset can be excluded from the model</a></li>
+<li class="chapter" data-level="3.1.4" data-path="inference.html"><a href="inference.html#test-whether-the-pair-of-predictors-has-the-same-effect"><i class="fa fa-check"></i><b>3.1.4</b> Test whether the pair of predictors has the same effect</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="inference.html"><a href="inference.html#confidence-interval-ci"><i class="fa fa-check"></i><b>3.2</b> Confidence Interval (CI)</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>4</b> Prediction</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="prediction.html"><a href="prediction.html#prediction-interval"><i class="fa fa-check"></i><b>4.1</b> Prediction Interval</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="prediction.html"><a href="prediction.html#future-observation"><i class="fa fa-check"></i><b>4.1.1</b> Future observation</a></li>
+<li class="chapter" data-level="4.1.2" data-path="prediction.html"><a href="prediction.html#future-mean-response"><i class="fa fa-check"></i><b>4.1.2</b> Future mean response</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="prediction.html"><a href="prediction.html#r-example"><i class="fa fa-check"></i><b>4.2</b> R Example</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="diagnostics.html"><a href="diagnostics.html"><i class="fa fa-check"></i><b>5</b> Diagnostics</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="diagnostics.html"><a href="diagnostics.html#checking-error-assumptions"><i class="fa fa-check"></i><b>5.1</b> Checking Error Assumptions</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="diagnostics.html"><a href="diagnostics.html#constant-noise-variance"><i class="fa fa-check"></i><b>5.1.1</b> Constant Noise Variance</a></li>
+<li class="chapter" data-level="5.1.2" data-path="diagnostics.html"><a href="diagnostics.html#checking-noise-normality"><i class="fa fa-check"></i><b>5.1.2</b> Checking Noise Normality</a></li>
+<li class="chapter" data-level="5.1.3" data-path="diagnostics.html"><a href="diagnostics.html#shapiro-wilk-test-for-normality"><i class="fa fa-check"></i><b>5.1.3</b> Shapiro-Wilk test for normality</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="diagnostics.html"><a href="diagnostics.html#finding-unusual-points"><i class="fa fa-check"></i><b>5.2</b> Finding Unusual Points</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="diagnostics.html"><a href="diagnostics.html#leverage"><i class="fa fa-check"></i><b>5.2.1</b> Leverage</a></li>
+<li class="chapter" data-level="5.2.2" data-path="diagnostics.html"><a href="diagnostics.html#half-normal-plot"><i class="fa fa-check"></i><b>5.2.2</b> Half-normal Plot</a></li>
+<li class="chapter" data-level="5.2.3" data-path="diagnostics.html"><a href="diagnostics.html#studentized-residuals"><i class="fa fa-check"></i><b>5.2.3</b> Studentized Residuals</a></li>
+<li class="chapter" data-level="5.2.4" data-path="diagnostics.html"><a href="diagnostics.html#externally-studentized-residuals"><i class="fa fa-check"></i><b>5.2.4</b> Externally Studentized Residuals</a></li>
+<li class="chapter" data-level="5.2.5" data-path="diagnostics.html"><a href="diagnostics.html#multiple-hypothesis-tests"><i class="fa fa-check"></i><b>5.2.5</b> Multiple Hypothesis Tests</a></li>
+<li class="chapter" data-level="5.2.6" data-path="diagnostics.html"><a href="diagnostics.html#influential-points"><i class="fa fa-check"></i><b>5.2.6</b> Influential Points</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="diagnostics.html"><a href="diagnostics.html#checking-model-structure"><i class="fa fa-check"></i><b>5.3</b> Checking Model Structure</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="diagnostics.html"><a href="diagnostics.html#exploratory-analysis"><i class="fa fa-check"></i><b>5.3.1</b> Exploratory analysis</a></li>
+<li class="chapter" data-level="5.3.2" data-path="diagnostics.html"><a href="diagnostics.html#partial-regression-plot"><i class="fa fa-check"></i><b>5.3.2</b> Partial regression plot</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="problem-with-predictors.html"><a href="problem-with-predictors.html"><i class="fa fa-check"></i><b>6</b> Problem with Predictors</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="problem-with-predictors.html"><a href="problem-with-predictors.html#errors-in-predictors"><i class="fa fa-check"></i><b>6.1</b> Errors in predictors</a></li>
+<li class="chapter" data-level="6.2" data-path="problem-with-predictors.html"><a href="problem-with-predictors.html#change-of-scale"><i class="fa fa-check"></i><b>6.2</b> Change of scale</a></li>
+<li class="chapter" data-level="6.3" data-path="problem-with-predictors.html"><a href="problem-with-predictors.html#standardize-variables"><i class="fa fa-check"></i><b>6.3</b> Standardize Variables</a></li>
+<li class="chapter" data-level="6.4" data-path="problem-with-predictors.html"><a href="problem-with-predictors.html#colinearity"><i class="fa fa-check"></i><b>6.4</b> Colinearity</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="problem-with-error.html"><a href="problem-with-error.html"><i class="fa fa-check"></i><b>7</b> Problem with Error</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="problem-with-error.html"><a href="problem-with-error.html#section"><i class="fa fa-check"></i><b>7.1</b> </a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Regression Analysis Notes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="diagnostics" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">Chapter 5</span> Diagnostics<a href="diagnostics.html#diagnostics" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="checking-error-assumptions" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Checking Error Assumptions<a href="diagnostics.html#checking-error-assumptions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="constant-noise-variance" class="section level3 hasAnchor" number="5.1.1">
+<h3><span class="header-section-number">5.1.1</span> Constant Noise Variance<a href="diagnostics.html#constant-noise-variance" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><em>Residual plot</em> plots residuals <span class="math inline">\(\hat{\varepsilon}_i\)</span> against predictions <span class="math inline">\(\hat{y}_i\)</span>. It can be used to check</p>
+<ul>
+<li><p><em>Linear mean</em>: linear model (i.e., <span class="math inline">\(\mathbb{E}[Y|X]=X\boldsymbol{\beta}\)</span>) implies <span class="math inline">\(\textrm{Cov}(\hat{\boldsymbol{\varepsilon},\hat{\boldsymbol{y}}})=\widehat{\textrm{Cov}}(\hat{\boldsymbol{\varepsilon}},\hat{\boldsymbol{y}})=0\)</span>. So, the plot should display no pattern but appear as a evenly spread horizontal band of points with mean zero.</p>
+<ul>
+<li><p>For population covariance, notice
+<span class="math display">\[
+\textrm{Cov}(\hat{\boldsymbol{\varepsilon}},\hat{\boldsymbol{y}}) = \textrm{Cov}((I-H)\boldsymbol{y},H\boldsymbol{y}) = (I-H)\textrm{Var}(\boldsymbol{y})H^\top=\sigma^2(I-H)H^\top = 0
+\]</span>
+where <span class="math inline">\(H\)</span> is the hat matrix <span class="math inline">\(X(X^\top X)^{-1}X^\top\)</span>.</p>
+<p><em>This derivation used the homoscedasticity and independence of the noise distribution.</em></p></li>
+<li><p>For sample covariance, recall <span class="math inline">\(\sum_{i\in[n]}\hat{\varepsilon}_i=0\)</span> as <span class="math inline">\(\hat{\boldsymbol{\varepsilon}}\in\mathcal{C}(X)^\perp\)</span> and <span class="math inline">\(\mathbb{1}\in\mathcal{C}(X)\)</span>. Then, we have
+<span class="math display">\[
+\sum_{i\in[n]}(\hat{\varepsilon}_i-\bar{\hat{\varepsilon}})(\hat{y}_i-\bar{\hat{y}}) = \sum_{i\in[n]}\hat{\varepsilon}_i(\hat{y}_i-\bar{\hat{y}}) = \sum_{i\in[n]}\hat{\varepsilon}_i\hat{y}_i=\hat{\boldsymbol{\varepsilon}}^\top\hat{\boldsymbol{y}} = \boldsymbol{y}^\top(I-H)H\boldsymbol{y} = 0.
+\]</span>
+<em>This derivation is independent of the noise distribution as all elements are determined by the algorithm.</em></p></li>
+</ul></li>
+<li><p><em>Homoscedasticity</em> and <em>heteroscedasticity</em>: whether the dispersion of <span class="math inline">\(\hat{\varepsilon}_i\)</span> is constant (resp. increases) in <span class="math inline">\(\hat{y}_i\)</span> for homoscedasticity (resp. heteroscedasticity).</p></li>
+</ul>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="diagnostics.html#cb17-1" tabindex="-1"></a><span class="fu">library</span>(faraway)</span>
+<span id="cb17-2"><a href="diagnostics.html#cb17-2" tabindex="-1"></a><span class="fu">data</span>(savings)</span>
+<span id="cb17-3"><a href="diagnostics.html#cb17-3" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> pop15 <span class="sc">+</span> pop75 <span class="sc">+</span> dpi <span class="sc">+</span> ddpi, savings)</span>
+<span id="cb17-4"><a href="diagnostics.html#cb17-4" tabindex="-1"></a><span class="fu">plot</span>(result<span class="sc">$</span>fitted, result<span class="sc">$</span>residual, <span class="at">xlab=</span><span class="st">&quot;Fitted&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;Residuals&quot;</span>)  <span class="co"># ehat v.s. yhat</span></span>
+<span id="cb17-5"><a href="diagnostics.html#cb17-5" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="dv">0</span>)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="diagnostics.html#cb18-1" tabindex="-1"></a><span class="fu">plot</span>(result<span class="sc">$</span>fitted, <span class="fu">abs</span>(result<span class="sc">$</span>residual), <span class="at">xlab=</span><span class="st">&quot;Fitted&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;|Residuals|&quot;</span>)  <span class="co"># |ehat| v.s. yhat</span></span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="diagnostics.html#cb19-1" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(<span class="fu">abs</span>(result<span class="sc">$</span>residual) <span class="sc">~</span> result<span class="sc">$</span>fitted))</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = abs(result$residual) ~ result$fitted)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -2.8395 -1.6078 -0.3493  0.6625  6.7036 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)     4.8398     1.1865   4.079  0.00017 ***
+## result$fitted  -0.2035     0.1185  -1.717  0.09250 .  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 2.163 on 48 degrees of freedom
+## Multiple R-squared:  0.05784,    Adjusted R-squared:  0.03821 
+## F-statistic: 2.947 on 1 and 48 DF,  p-value: 0.0925</code></pre>
+<ul>
+<li>The last method regress <span class="math inline">\(|\hat{\varepsilon}_i|\)</span><a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> onto <span class="math inline">\(\hat{y}_i\)</span> and test <span class="math inline">\(H_0:\beta_1=0\)</span> v.s. <span class="math inline">\(H_A:\beta_1\neq 0\)</span>.</li>
+</ul>
+</div>
+<div id="checking-noise-normality" class="section level3 hasAnchor" number="5.1.2">
+<h3><span class="header-section-number">5.1.2</span> Checking Noise Normality<a href="diagnostics.html#checking-noise-normality" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="qq-plot" class="section level4 hasAnchor" number="5.1.2.1">
+<h4><span class="header-section-number">5.1.2.1</span> QQ-plot<a href="diagnostics.html#qq-plot" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<ul>
+<li>Sort the residuals <span class="math inline">\(\hat{\varepsilon}_{[1]}\leq \hat{\varepsilon}_{[2]}\leq \dots\leq \hat{\varepsilon}_{[n]}\)</span> — <em>order statistic</em></li>
+<li>Compute the <span class="math inline">\(n\)</span> percentiles <span class="math inline">\(u_i = F^{-1}\left(\frac{i}{n+1}\right)\)</span> where <span class="math inline">\(F\)</span> is the CDF of the testing distribution</li>
+<li>Plot <span class="math inline">\(\hat{\varepsilon}_{[i]}\)</span> against <span class="math inline">\(u_i\)</span></li>
+<li>The data follows the distribution if the scatter points lie on a straight line</li>
+</ul>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="diagnostics.html#cb21-1" tabindex="-1"></a><span class="do">## Example QQ plot</span></span>
+<span id="cb21-2"><a href="diagnostics.html#cb21-2" tabindex="-1"></a><span class="fu">qqnorm</span>(result<span class="sc">$</span>residual, <span class="at">ylab=</span><span class="st">&quot;Residuals&quot;</span>)</span>
+<span id="cb21-3"><a href="diagnostics.html#cb21-3" tabindex="-1"></a><span class="fu">qqline</span>(result<span class="sc">$</span>residual)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><em>Remarks</em></p>
+<ul>
+<li>Should be tested after ensuring linear mean and constant noise variance</li>
+<li>Possibilities of non-normality (both 1 and 2 are heavy-tailed distribution):
+<ol style="list-style-type: decimal">
+<li>Skewed distribution: log-normal</li>
+<li>Long-tailed distribution: Cauchy</li>
+<li>Short-tailed distribution: uniform with finite support</li>
+</ol></li>
+</ul>
+</div>
+</div>
+<div id="shapiro-wilk-test-for-normality" class="section level3 hasAnchor" number="5.1.3">
+<h3><span class="header-section-number">5.1.3</span> Shapiro-Wilk test for normality<a href="diagnostics.html#shapiro-wilk-test-for-normality" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><span class="math inline">\(H_0\)</span>: <span class="math inline">\(x_1,\dots,x_n\)</span> are sampled from a normally distributed population</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="diagnostics.html#cb22-1" tabindex="-1"></a><span class="fu">shapiro.test</span>(result<span class="sc">$</span>residual)</span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  result$residual
+## W = 0.98698, p-value = 0.8524</code></pre>
+<p>Shapiro-Wilk test is not very helpful compared to QQ plot because</p>
+<ul>
+<li>When <span class="math inline">\(n\)</span> is small, the test has little power</li>
+<li>When <span class="math inline">\(n\)</span> is large, we can use the asymptotic distribution (e.g., central limit theorem) to do inference (i.e., hypothesis tests or CI).<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a></li>
+</ul>
+</div>
+</div>
+<div id="finding-unusual-points" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Finding Unusual Points<a href="diagnostics.html#finding-unusual-points" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li><em>Outliers</em>: large difference between the response <span class="math inline">\(y_i\)</span> and the mean <span class="math inline">\(\boldsymbol{x}_i^\top\boldsymbol{\beta}\)</span></li>
+<li><em>High-leverage points</em>: large difference between the predictor vector <span class="math inline">\(\boldsymbol{x}_i\)</span> for the <span class="math inline">\(i\)</span>th case and the center of the <span class="math inline">\(X\)</span>-data</li>
+</ul>
+<div id="leverage" class="section level3 hasAnchor" number="5.2.1">
+<h3><span class="header-section-number">5.2.1</span> Leverage<a href="diagnostics.html#leverage" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The <em>leverage</em> of a point <span class="math inline">\(i\)</span> is <span class="math inline">\(h_i:=H_{ii}\)</span> where <span class="math inline">\(H\)</span> is the hat matrix <span class="math inline">\(H:=X(X^\top X)^{-1}X^\top\)</span>.</p>
+<ol style="list-style-type: decimal">
+<li><span class="math inline">\(h_i\)</span> depends on on <span class="math inline">\(X\)</span></li>
+<li><span class="math inline">\(\textrm{Var}(\hat{\varepsilon}_i)=\sigma^2(1-h_i)\)</span></li>
+<li><span class="math inline">\(\sum_{i\in[n]}h_i=\textrm{Tr}(H)=p+1\)</span></li>
+<li><span class="math inline">\(\frac{1}{n}\leq h_i \leq 1\)</span> for all <span class="math inline">\(i\in[n]\)</span></li>
+</ol>
+<p><em>Remarks</em></p>
+<ul>
+<li>Average leverage is <span class="math inline">\(\frac{p+1}{n}\)</span>, so generally leverage larger than <span class="math inline">\(\frac{2(p+1)}{n}\)</span> can be considered high</li>
+<li>Let <span class="math inline">\(\tilde{\boldsymbol{x}}\)</span> be the “reduced” data by removing the first constant value. Then,
+<span class="math display">\[
+  h_i=\frac{1}{n}+(\tilde{\boldsymbol{x}}_i-\bar{\tilde{\boldsymbol{x}}})^\top(\tilde{X}_C^\top\tilde{X}_C)^{-1}(\tilde{\boldsymbol{x}}_i-\bar{\tilde{\boldsymbol{x}}})
+\]</span>
+where <span class="math inline">\(\tilde{X}_C=\begin{bmatrix}(\tilde{\boldsymbol{x}}_1-\bar{\boldsymbol{x}}) &amp; \dots &amp; (\tilde{\boldsymbol{x}}_n-\bar{\boldsymbol{x}})\end{bmatrix}^\top\)</span></li>
+</ul>
+</div>
+<div id="half-normal-plot" class="section level3 hasAnchor" number="5.2.2">
+<h3><span class="header-section-number">5.2.2</span> Half-normal Plot<a href="diagnostics.html#half-normal-plot" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Sort <span class="math inline">\(h_{[1]}\leq h_{[2]}\leq \dots \leq h_{[n]}\)</span></li>
+<li>Compute <span class="math inline">\(u_i=F^{-1}\left(\frac{i}{n+1}\right)\)</span> for <span class="math inline">\(i\in[n]\)</span></li>
+<li>Plot <span class="math inline">\(h_{[i]}\)</span> v.s. <span class="math inline">\(u_i\)</span></li>
+<li>A high-leverage point usually diverges from the rest of the points.</li>
+</ul>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="diagnostics.html#cb24-1" tabindex="-1"></a><span class="do">## Example for half normal test, high-leverage points usually have large-deviating predictor values </span></span>
+<span id="cb24-2"><a href="diagnostics.html#cb24-2" tabindex="-1"></a><span class="fu">data</span>(savings)</span>
+<span id="cb24-3"><a href="diagnostics.html#cb24-3" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> ., <span class="at">data=</span>savings)</span>
+<span id="cb24-4"><a href="diagnostics.html#cb24-4" tabindex="-1"></a><span class="fu">halfnorm</span>(<span class="fu">lm.influence</span>(result)<span class="sc">$</span>hat, <span class="at">nlab=</span><span class="dv">2</span>, <span class="at">ylab=</span><span class="st">&quot;Leverage&quot;</span>)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="diagnostics.html#cb25-1" tabindex="-1"></a>savings[<span class="fu">c</span>(<span class="dv">44</span>,<span class="dv">49</span>),]</span></code></pre></div>
+<pre><code>##                 sr pop15 pop75     dpi  ddpi
+## United States 7.56 29.81  3.43 4001.89  2.45
+## Libya         8.89 43.69  2.07  123.58 16.71</code></pre>
+</div>
+<div id="studentized-residuals" class="section level3 hasAnchor" number="5.2.3">
+<h3><span class="header-section-number">5.2.3</span> Studentized Residuals<a href="diagnostics.html#studentized-residuals" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><em>Studentized residuals</em> rescales the residual for unit variance using the leverage of that data point:</p>
+<p><span class="math display">\[
+  r_i=\frac{\hat{\varepsilon}_i}{\hat{\sigma}\sqrt{1-h_i}}
+\]</span></p>
+<div class="theorem">
+<p><span id="thm:unlabeled-div-27" class="theorem"><strong>Theorem 5.1  </strong></span><span class="math inline">\(\frac{r_i^2}{n-p-1}\sim\textrm{Beta}(\frac{1}{2},\frac{n-p-2}{2})\)</span>.</p>
+</div>
+<div class="proof">
+<p><span id="unlabeled-div-28" class="proof"><em>Proof</em>. </span><span class="math display">\[
+    \frac{r_i^2}{n-p-1} = \frac{\hat{\varepsilon}_i^2/(\sigma^2(1-h_i))}{\hat{\sigma}^2/\sigma^2}.
+  \]</span>
+It directly follows that <span class="math inline">\(\hat{\varepsilon}_i^2/(\sigma^2(1-h_i))\sim\chi_1^2\)</span> and <span class="math inline">\(\hat{\sigma}^2/\sigma^2\sim\chi_{n-p-1}^2\)</span>. However, it’s not <span class="math inline">\(F\)</span>-distribution because they are not independent.
+Let <span class="math inline">\(\boldsymbol{\varepsilon}\sim\mathcal{N}_n(\boldsymbol{0},I)\)</span> the above expression is equivalent to <span class="math inline">\(\frac{r_i^2}{n-p-1}\sim\frac{\boldsymbol{\varepsilon}^\top R^\top\boldsymbol{e}_i\boldsymbol{e}_i^\top R\boldsymbol{\varepsilon}/(1-h_i)}{\boldsymbol{\varepsilon}^\top R\boldsymbol{\varepsilon}}=:\frac{\boldsymbol{\varepsilon}^\top Q\boldsymbol{\varepsilon}}{\boldsymbol{\varepsilon}^\top R\boldsymbol{\varepsilon}}\)</span> where <span class="math inline">\(\boldsymbol{e}_i\)</span> is the <span class="math inline">\(i\)</span>-th unit vector. First notice that <span class="math inline">\(Q\)</span> is symmetric and
+<span class="math display">\[
+  Q^2 = R^\top\boldsymbol{e}_i\boldsymbol{e}_i^\top RR\boldsymbol{e}_i\boldsymbol{e}_i^\top R/(1-h_i)^2=R\boldsymbol{e}_i\boldsymbol{e}_i^\top R/(1-h_i)=Q.
+\]</span>
+Thus, <span class="math inline">\(Q\)</span> is a projection matrix. Notice that <span class="math inline">\(\boldsymbol{\varepsilon}^\top R\boldsymbol{\varepsilon}-\boldsymbol{\varepsilon}^\top Q\boldsymbol{\varepsilon}=\boldsymbol{\varepsilon}^\top(R-Q)\boldsymbol{\varepsilon}\)</span> since <span class="math inline">\(RQ=QR=Q\)</span>. The last step is to show that <span class="math inline">\(\boldsymbol{\varepsilon}^\top(R-Q)\boldsymbol{\varepsilon}\)</span> is independent of <span class="math inline">\(\boldsymbol{\varepsilon}^\top Q\boldsymbol{\varepsilon}\)</span>. This is straightforward because <span class="math inline">\((R-Q)\boldsymbol{\varepsilon}\)</span> is independent of <span class="math inline">\(Q\boldsymbol{\varepsilon}\)</span> and the numerator and denominator are functions of each of them.</p>
+</div>
+<ul>
+<li>Notice <span class="math inline">\(r_i\)</span> does not follow <span class="math inline">\(t\)</span>-distribution because the numerator and denominator are not independent. A general form of <span class="math inline">\(t\)</span>-distribution requires the numerator and denominator lying on orthogonal subspaces.</li>
+<li>Studentized residuals are generally preferred than raw data in diagnostic plots (e.g., QQ-plot or residual plots).</li>
+</ul>
+</div>
+<div id="externally-studentized-residuals" class="section level3 hasAnchor" number="5.2.4">
+<h3><span class="header-section-number">5.2.4</span> Externally Studentized Residuals<a href="diagnostics.html#externally-studentized-residuals" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Exclude point <span class="math inline">\(i\)</span> and estimate <span class="math inline">\(\hat{\boldsymbol{\beta}}_{(i)}\)</span> using the rest <span class="math inline">\(n-1\)</span> points. Compute <span class="math inline">\(\hat{y}_{(i)}=\boldsymbol{x}_i\hat{\boldsymbol{\beta}}_{(i)}\)</span>.</p>
+<p>The <em>externally studentized residual</em> define the residual as the prediction error:
+<span class="math display">\[
+\begin{aligned}
+  t_i &amp;= \frac{y_i-\hat{y}_{(i)}}{\hat{\sigma}_{(i)}\sqrt{1+\boldsymbol{x}_i^\top (X_{(i)}^\top X_{(i)})^{-1}\boldsymbol{x}_i}} \sim t_{(n-1)-(p+1)}
+\end{aligned}
+\]</span></p>
+<div class="theorem">
+<p><span id="thm:unlabeled-div-29" class="theorem"><strong>Theorem 5.2  </strong></span>The externally studentized residual has two equivalent forms
+<span class="math display">\[
+t_i=\frac{\hat{\varepsilon}_i}{\hat{\sigma}_{(i)}\sqrt{1-h_i}}=r_i\left(\frac{n-(p+1)-1}{n-(p+1)-r_i^2}\right)^{1/2}
+\]</span></p>
+</div>
+<ul>
+<li>The first term is a contrast to the (internally) studentized residual</li>
+<li>The second line offers easier computation method: only need to do one regression with all <span class="math inline">\(n\)</span> points</li>
+<li>A reasonable of threshold for influential point is <span class="math inline">\(1\)</span>.</li>
+</ul>
+</div>
+<div id="multiple-hypothesis-tests" class="section level3 hasAnchor" number="5.2.5">
+<h3><span class="header-section-number">5.2.5</span> Multiple Hypothesis Tests<a href="diagnostics.html#multiple-hypothesis-tests" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Since we need to repeat the test <span class="math inline">\(n\)</span> times (on <span class="math inline">\(H_0\)</span> — observation <span class="math inline">\(i\)</span> is an outlier), we need to apply some adjustment to the significance level to avoid excess rejection on the set level.</p>
+<div id="bonferroni-correction" class="section level4 hasAnchor" number="5.2.5.1">
+<h4><span class="header-section-number">5.2.5.1</span> Bonferroni Correction<a href="diagnostics.html#bonferroni-correction" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p><span class="math display">\[
+  \begin{aligned}
+  \textrm{Type I Error} &amp;= \mathbb{P}_{H_0}(\textrm{reject at least one test}) \\
+  &amp;\leq \sum_{i\in[n]}\mathbb{P}_{H_0}(\textrm{reject test }i) \\
+  &amp;=n\alpha^{\textrm{adj}} \approx \alpha
+  \end{aligned}
+\]</span></p>
+<p>So, instead we test each observation with significance level <span class="math inline">\(\alpha/n\)</span>.</p>
+</div>
+</div>
+<div id="influential-points" class="section level3 hasAnchor" number="5.2.6">
+<h3><span class="header-section-number">5.2.6</span> Influential Points<a href="diagnostics.html#influential-points" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>An <em>influential point</em> is one whose removal from the d4ataset would cause a large change in the fit. Outliers or high-leverage points can both be influential points.</p>
+<div class="definition">
+<p><span id="def:unlabeled-div-30" class="definition"><strong>Definition 5.1  (Cook's Distance) </strong></span><em>Cook statistic</em> is defined as
+<span class="math display">\[
+  \begin{aligned}
+  D_i&amp;=\frac{(\hat{y}_i-\hat{y}_{(i)})^\top(\hat{y}_i-\hat{y}_{(i)})}{\hat{\sigma}(p+1)} \\
+  &amp;= \frac{1}{p+1}r_i^2\frac{h_i}{1-h_i}
+  \end{aligned}
+\]</span></p>
+</div>
+<ul>
+<li>Cook’s statistic measures a combination of residual effect and leverage effect</li>
+<li>In practice, usually 1 is used as a critical value for potential influential point</li>
+</ul>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="diagnostics.html#cb27-1" tabindex="-1"></a><span class="fu">data</span>(savings)</span>
+<span id="cb27-2"><a href="diagnostics.html#cb27-2" tabindex="-1"></a><span class="do">## Compute Cook&#39;s distance</span></span>
+<span id="cb27-3"><a href="diagnostics.html#cb27-3" tabindex="-1"></a>cook <span class="ot">&lt;-</span> <span class="fu">cooks.distance</span>(result)</span>
+<span id="cb27-4"><a href="diagnostics.html#cb27-4" tabindex="-1"></a><span class="fu">halfnorm</span>(cook, <span class="at">nlab=</span><span class="dv">3</span>, <span class="at">ylab=</span><span class="st">&quot;Cook&#39;s distance&quot;</span>)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="diagnostics.html#cb28-1" tabindex="-1"></a><span class="do">## Fit the model without the influential point</span></span>
+<span id="cb28-2"><a href="diagnostics.html#cb28-2" tabindex="-1"></a>result.libya <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> pop15 <span class="sc">+</span> pop75 <span class="sc">+</span> dpi <span class="sc">+</span> ddpi, <span class="at">data=</span>savings, <span class="at">subset=</span>(cook <span class="sc">&lt;</span> <span class="fu">max</span>(cook)))</span>
+<span id="cb28-3"><a href="diagnostics.html#cb28-3" tabindex="-1"></a><span class="fu">summary</span>(result.libya)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = sr ~ pop15 + pop75 + dpi + ddpi, data = savings, 
+##     subset = (cook &lt; max(cook)))
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -8.0699 -2.5408 -0.1584  2.0934  9.3732 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)   
+## (Intercept) 24.5240460  8.2240263   2.982  0.00465 **
+## pop15       -0.3914401  0.1579095  -2.479  0.01708 * 
+## pop75       -1.2808669  1.1451821  -1.118  0.26943   
+## dpi         -0.0003189  0.0009293  -0.343  0.73312   
+## ddpi         0.6102790  0.2687784   2.271  0.02812 * 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 3.795 on 44 degrees of freedom
+## Multiple R-squared:  0.3554, Adjusted R-squared:  0.2968 
+## F-statistic: 6.065 on 4 and 44 DF,  p-value: 0.0005617</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="diagnostics.html#cb30-1" tabindex="-1"></a><span class="do">## Compare this with the full summary pannel where the ddpi coefficient changes about 50%</span></span>
+<span id="cb30-2"><a href="diagnostics.html#cb30-2" tabindex="-1"></a><span class="do">## and the R2 value increases by ~0.02</span></span>
+<span id="cb30-3"><a href="diagnostics.html#cb30-3" tabindex="-1"></a><span class="do">## We don&#39;t like our model to be so sensitive to just one country</span></span>
+<span id="cb30-4"><a href="diagnostics.html#cb30-4" tabindex="-1"></a><span class="fu">summary</span>(result)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = sr ~ ., data = savings)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -8.2422 -2.6857 -0.2488  2.4280  9.7509 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 28.5660865  7.3545161   3.884 0.000334 ***
+## pop15       -0.4611931  0.1446422  -3.189 0.002603 ** 
+## pop75       -1.6914977  1.0835989  -1.561 0.125530    
+## dpi         -0.0003369  0.0009311  -0.362 0.719173    
+## ddpi         0.4096949  0.1961971   2.088 0.042471 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 3.803 on 45 degrees of freedom
+## Multiple R-squared:  0.3385, Adjusted R-squared:  0.2797 
+## F-statistic: 5.756 on 4 and 45 DF,  p-value: 0.0007904</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="diagnostics.html#cb32-1" tabindex="-1"></a><span class="do">## Compute changes in coefficients</span></span>
+<span id="cb32-2"><a href="diagnostics.html#cb32-2" tabindex="-1"></a><span class="do">## The lower left points are likely influential points</span></span>
+<span id="cb32-3"><a href="diagnostics.html#cb32-3" tabindex="-1"></a><span class="do">## Add identify(result.inf$coef[, 2], result.inf$coef[, 3]) to enable interactive tools to identify</span></span>
+<span id="cb32-4"><a href="diagnostics.html#cb32-4" tabindex="-1"></a><span class="do">## those points by clicking</span></span>
+<span id="cb32-5"><a href="diagnostics.html#cb32-5" tabindex="-1"></a>result.inf <span class="ot">&lt;-</span> <span class="fu">lm.influence</span>(result)</span>
+<span id="cb32-6"><a href="diagnostics.html#cb32-6" tabindex="-1"></a><span class="fu">plot</span>(result.inf<span class="sc">$</span>coef[,<span class="dv">2</span>], result.inf<span class="sc">$</span>coef[,<span class="dv">3</span>], <span class="at">xlab=</span><span class="st">&quot;Change in beta2&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;Change in beta3&quot;</span>)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-12-2.png" width="672" /></p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="diagnostics.html#cb33-1" tabindex="-1"></a><span class="do">## Print points </span></span>
+<span id="cb33-2"><a href="diagnostics.html#cb33-2" tabindex="-1"></a><span class="fu">rownames</span>(savings)[<span class="fu">c</span>(<span class="dv">23</span>, <span class="dv">46</span>, <span class="dv">49</span>)]</span></code></pre></div>
+<pre><code>## [1] &quot;Japan&quot;  &quot;Zambia&quot; &quot;Libya&quot;</code></pre>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="diagnostics.html#cb35-1" tabindex="-1"></a><span class="do">## Fit the model w/o Japan</span></span>
+<span id="cb35-2"><a href="diagnostics.html#cb35-2" tabindex="-1"></a>result.japan <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> pop15 <span class="sc">+</span> pop75 <span class="sc">+</span> dpi <span class="sc">+</span> ddpi, <span class="at">data=</span>savings, <span class="at">subset=</span>(<span class="fu">rownames</span>(savings)<span class="sc">!=</span><span class="st">&quot;Japan&quot;</span>))</span>
+<span id="cb35-3"><a href="diagnostics.html#cb35-3" tabindex="-1"></a><span class="fu">summary</span>(result.japan)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = sr ~ pop15 + pop75 + dpi + ddpi, data = savings, 
+##     subset = (rownames(savings) != &quot;Japan&quot;))
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -7.997 -2.592 -0.115  2.032 10.157 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)   
+## (Intercept) 23.9401714  7.7839968   3.076  0.00361 **
+## pop15       -0.3679015  0.1536296  -2.395  0.02096 * 
+## pop75       -0.9736743  1.1554502  -0.843  0.40397   
+## dpi         -0.0004706  0.0009191  -0.512  0.61116   
+## ddpi         0.3347486  0.1984457   1.687  0.09871 . 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 3.738 on 44 degrees of freedom
+## Multiple R-squared:  0.277,  Adjusted R-squared:  0.2113 
+## F-statistic: 4.214 on 4 and 44 DF,  p-value: 0.005649</code></pre>
+</div>
+</div>
+<div id="checking-model-structure" class="section level2 hasAnchor" number="5.3">
+<h2><span class="header-section-number">5.3</span> Checking Model Structure<a href="diagnostics.html#checking-model-structure" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Tests that imply the underlying structure of the model as well as suggestions on how to improve the structure of the model.</p>
+<div id="exploratory-analysis" class="section level3 hasAnchor" number="5.3.1">
+<h3><span class="header-section-number">5.3.1</span> Exploratory analysis<a href="diagnostics.html#exploratory-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Plot <span class="math inline">\(y\)</span> v.s. each individual <span class="math inline">\(x_i\)</span> to investigate the relationship and/or linearity between each individual predictor.</li>
+<li>Usually done before fitting a model</li>
+<li><em>Drawback</em>: other predictors may affect the relationship between <span class="math inline">\(y\)</span> and <span class="math inline">\(x_i\)</span></li>
+</ul>
+</div>
+<div id="partial-regression-plot" class="section level3 hasAnchor" number="5.3.2">
+<h3><span class="header-section-number">5.3.2</span> Partial regression plot<a href="diagnostics.html#partial-regression-plot" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Isolate the effect of <span class="math inline">\(x_i\)</span> on <span class="math inline">\(y\)</span></li>
+<li>Regress <span class="math inline">\(y\)</span> on all <span class="math inline">\(x\)</span> except <span class="math inline">\(x_i\)</span>, get residuals <span class="math inline">\(\hat{\delta}\)</span> — take out effect of other <span class="math inline">\(X\)</span> from <span class="math inline">\(y\)</span></li>
+<li>Regress <span class="math inline">\(x_i\)</span> on all <span class="math inline">\(x\)</span> except <span class="math inline">\(x_i\)</span>, get residuals <span class="math inline">\(\hat{\gamma}\)</span> — take out effect of other <span class="math inline">\(X\)</span> from <span class="math inline">\(x_i\)</span></li>
+<li>Plot <span class="math inline">\(\hat{\delta}\)</span> v.s. <span class="math inline">\(\hat{\gamma}\)</span>
+<ul>
+<li>The slope is <span class="math inline">\(\hat{\beta}_j\)</span></li>
+<li>Can be used for linearity, outliers, and influential point tests</li>
+</ul></li>
+</ul>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="diagnostics.html#cb37-1" tabindex="-1"></a><span class="fu">data</span>(savings)</span>
+<span id="cb37-2"><a href="diagnostics.html#cb37-2" tabindex="-1"></a><span class="do">## Partial regression plot</span></span>
+<span id="cb37-3"><a href="diagnostics.html#cb37-3" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> pop15 <span class="sc">+</span> pop75 <span class="sc">+</span> dpi <span class="sc">+</span> ddpi, <span class="at">data=</span>savings)</span>
+<span id="cb37-4"><a href="diagnostics.html#cb37-4" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="fu">residuals</span>(<span class="fu">lm</span>(sr <span class="sc">~</span> pop75 <span class="sc">+</span> dpi <span class="sc">+</span> ddpi, <span class="at">data=</span>savings))</span>
+<span id="cb37-5"><a href="diagnostics.html#cb37-5" tabindex="-1"></a>gamma <span class="ot">&lt;-</span> <span class="fu">residuals</span>(<span class="fu">lm</span>(pop15 <span class="sc">~</span> pop75 <span class="sc">+</span> dpi <span class="sc">+</span> ddpi, <span class="at">data=</span>savings))</span>
+<span id="cb37-6"><a href="diagnostics.html#cb37-6" tabindex="-1"></a><span class="fu">plot</span>(gamma,delta, <span class="at">xlab=</span><span class="st">&quot;Pop15 Residuals&quot;</span>, <span class="at">ylab=</span><span class="st">&quot;Saving Residuals&quot;</span>)</span>
+<span id="cb37-7"><a href="diagnostics.html#cb37-7" tabindex="-1"></a>temp <span class="ot">&lt;-</span> <span class="fu">lm</span>(delta <span class="sc">~</span> gamma)</span>
+<span id="cb37-8"><a href="diagnostics.html#cb37-8" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">reg=</span>temp)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="diagnostics.html#cb38-1" tabindex="-1"></a><span class="do">## The slope of the partial regression plot</span></span>
+<span id="cb38-2"><a href="diagnostics.html#cb38-2" tabindex="-1"></a><span class="do">## Notice this is the same as beta(pop15) in the summary after this</span></span>
+<span id="cb38-3"><a href="diagnostics.html#cb38-3" tabindex="-1"></a><span class="fu">coef</span>(temp)</span></code></pre></div>
+<pre><code>##   (Intercept)         gamma 
+## -1.545720e-16 -4.611931e-01</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="diagnostics.html#cb40-1" tabindex="-1"></a><span class="fu">coef</span>(result)</span></code></pre></div>
+<pre><code>##   (Intercept)         pop15         pop75           dpi          ddpi 
+## 28.5660865407 -0.4611931471 -1.6914976767 -0.0003369019  0.4096949279</code></pre>
+
+</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="3">
+<li id="fn3"><p>Must have the absolute value as we are testing for <em>variance</em>.<a href="diagnostics.html#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p>Notice that we only requires normality in the inference step.<a href="diagnostics.html#fnref4" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="prediction.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="problem-with-predictors.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": "https://github.com/rstudio/bookdown-demo/edit/master/04-diagnosis.Rmd",
+    "text": "Edit"
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
